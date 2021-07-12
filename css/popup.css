@@ -1,0 +1,24 @@
+body {
+    width: 250px;
+    height: 272px;
+}
+
+/* Canvas and video */
+video#kanjiguide {
+    position: absolute;
+}
+
+canvas#drawcanvas {
+    border: 1px solid #7289DA;
+    z-index: 10;
+    position: absolute;
+}
+
+/* Various div elements */
+div#drawcontainer {
+    height: 248px;
+}
+
+div#panel * {
+    display: inline-block;
+}

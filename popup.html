@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/popup.css">
+</head>
+<body>
+    <div id="drawcontainer">
+        <video id="kanjiguide" autoplay></video>
+        <canvas id="drawcanvas">
+            Your browser does not support the canvas element. You really need to install a better browser
+        </canvas>
+    </div>
+    
+    <!-- Panel beneath canvas/video thing -->
+    <div id="panel">
+        <input type="button" id="playpause" value="⏸"></input>
+        <input type="button" id="eraseall" value="🗑️"></input>
+        <p>Selected kanji: <span id="selectedkanji"></span></p>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/popup.js"></script>
+    <script src="js/canvas.js"></script>
+</body>
+</html>
