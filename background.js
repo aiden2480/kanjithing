@@ -21,7 +21,7 @@ chrome.runtime.onInstalled.addListener(reason => {
     console.log("oh shit this actually fired", reason);
 
     setBrowserIcon(current, true);
-    chrome.runtime.setUninstallURL("https://youtu.be/dQw4w9WgXcQ"); // ( ͡° ͜ʖ ͡°)
+    chrome.runtime.setUninstallURL("https://kanjithing-backend.chocolatejade42.repl.co/uninstall");
 });
 
 /* Script to change the browser icon */
