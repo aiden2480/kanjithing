@@ -13,14 +13,23 @@ I haven't yet bothered to make the extension automatically update, so the easies
 is to `git clone` this repository rather than download the zip file and you can just run `git pull origin master` yourself.
 You'll need to go back into the [chrome extension settings](chrome://extensions) and press the refresh icon next to the extension to reload.
 
-## :open_book: How to use
-At the moment the only thing you can really do is trace a singular kanji. It's really not that hard to figure out.
+## :file_cabinet: API
+The kanji drawing guide videos are sourced from [KanjiAlive](https://app.kanjialive.com/api/docs), and cached using a [middleman I created](https://replit.com/@chocolatejade42/kanjithing-backend) (as RapidAPI limits requests). 
+Requests can be made at the `/kanji/:kanji` endpoint, like so.
+
+```bash
+$ curl http://kanjithing-backend.chocolatejade42.repl.co/kanji/車 --location
+```
+```json
+{"status": 200,"video": "https://media.kanjialive.com/kanji_animations/kanji_mp4/kuruma_00.mp4"}
+```
 
 ## :memo: Future features
 - [ ] Make the user guess readings of kanji in words
 - [ ] Scoreboard somehow
-- [ ] Fix dependency on RapidAPI
 - [ ] Update indicator
 - [ ] Select a kanji grade to learn or a wakatta unit
 - [ ] Offline cache/compatability
     * might not be possible with the small amount of storage space allowed to chrome extensions
+- [x] Fix dependency on RapidAPI
+    - [kanjialive-backend on repl.it](https://replit.com/@chocolatejade42/kanjithing-backend)
