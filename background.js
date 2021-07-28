@@ -2,7 +2,7 @@
 var current = "番";
 
 /* Set up a listener so we can receive messages from the console */
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     // {type: ..., data: ...}
 
     switch (message.type) {
@@ -26,7 +26,7 @@ chrome.runtime.onInstalled.addListener(reason => {
 
 /* Script to change the browser icon */
 function setBrowserIcon(kanji, bypass=false) {
-    // https://jsfiddle.net/aiden2480/r80ftpvh/17/
+    // https://jsfiddle.net/1u37ovj9/
     if (current === kanji && !bypass) return;
 
     var canvas = new OffscreenCanvas(64, 64);
@@ -40,9 +40,9 @@ function setBrowserIcon(kanji, bypass=false) {
 
     context.textAlign = "center";
     context.fillStyle = "#FFFAFA";
-    context.fillText(kanji, 0.5 * canvas.width, 0.8 * canvas.height);
+    context.fillText(kanji, 0.5 * canvas.width, 0.825 * canvas.height);
 
     current = kanji;
     var imageData = context.getImageData(0, 0, 64, 64);
-    chrome.action.setIcon({imageData}, () => console.log(`Set browser icon to ${kanji}`));
+    chrome.action.setIcon({imageData}, () => console.log(`Set browser icon to %c${kanji}`, "color: #7289da"));
 };

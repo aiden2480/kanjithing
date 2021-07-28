@@ -6,17 +6,28 @@
 </head>
 <body>
     <div id="drawcontainer">
-        <video id="kanjiguide" autoplay></video>
-        <canvas id="drawcanvas">
-            Your browser does not support the canvas element. You really need to install a better browser
+        <video id="kanjiguide" draggable="false" width="248" height="248" autoplay></video>
+        <canvas id="drawcanvas" width="248" height="248">
+            Your browser does not support the canvas element.
+            You really need to install a better browser &#128533;
         </canvas>
     </div>
     
     <!-- Panel beneath canvas/video thing -->
     <div id="panel">
-        <input type="button" id="playpause" value="⏸"></input>
-        <input type="button" id="eraseall" value="🗑️"></input>
-        <p>Selected kanji: <span id="selectedkanji"></span></p>
+        <input type="button" id="playpause" value="&#9208;"></input>
+        <input type="button" id="eraseall" value="&#128465;&#65039;"></input>
+        
+        <select id="selectedkanji">
+            <option>月</option>
+            <option>火</option>
+            <option>水</option>
+            <option>木</option>
+            <option>金</option>
+            <option>土</option>
+            <option>日</option>
+            <option>曜</option>
+        </select>
     </div>
 
     <!-- Scripts -->
