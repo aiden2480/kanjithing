@@ -22,3 +22,7 @@ div#drawcontainer {
 div#panel * {
     display: inline-block;
 }
+
+option {
+    font-size: 200%;
+}

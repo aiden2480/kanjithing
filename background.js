@@ -1,5 +1,5 @@
-/* Store the current icon */
-var current = "番";
+/* Store the current kanji */
+var current = "時";
 
 /* Set up a listener so we can receive messages from the console */
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
@@ -19,6 +19,11 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 /* Set up a listener for when the extension is installed */
 chrome.runtime.onInstalled.addListener(reason => {
     console.log("oh shit this actually fired", reason);
+
+    // Set current kanji to default
+    chrome.storage.local.set({ current }, () => {
+        console.log("Set default kanji to", current);
+    });
 
     setBrowserIcon(current, true);
     chrome.runtime.setUninstallURL("https://kanjithing-backend.chocolatejade42.repl.co/uninstall");

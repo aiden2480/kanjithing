@@ -1,7 +1,7 @@
 {
     "name": "KanjiThing",
-    "description": "no idea",
-    "version": "0.0.1",
+    "description": "Learn kanji stroke order from the browser",
+    "version": "0.0.2",
     "manifest_version": 3,
     "permissions": ["storage"],
     "action": {
