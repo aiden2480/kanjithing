@@ -1,6 +1,7 @@
 body {
     width: 250px;
     height: 272px;
+    background-color: #36393e;
 }
 
 /* Canvas and video */
@@ -9,18 +10,32 @@ video#kanjiguide {
 }
 
 canvas#drawcanvas {
-    border: 1px solid #7289DA;
     z-index: 10;
     position: absolute;
 }
 
-/* Various div elements */
 div#drawcontainer {
     height: 248px;
 }
 
+/* Buttons beneath */
+div#panel {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+
 div#panel * {
+    margin: 5px 0px 0px 5px;
     display: inline-block;
+    background-color: #36393e;
+    color: #7289da;
+    border: 2px solid #7289da;
+}
+
+select#selectedkanji {
+    width: 43px;
+    height: 23px;
 }
 
 option {
