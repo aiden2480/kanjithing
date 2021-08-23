@@ -44,7 +44,7 @@ function loadKanjiSet(set, replace=true) {
 /* Add event listeners for the various elements */
 window.addEventListener("load", () => {
     // Load the selected kanji once prepared
-    loadKanjiSet("近区様町店道会社神番屋駅待持通");
+    loadKanjiSet("時間国先長話見言休聞今食勉強");
     chrome.storage.local.get(["current"], result => {
         selectedkanji.value = result.current;
         loadKanji(result.current);
