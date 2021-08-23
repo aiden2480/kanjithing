@@ -33,11 +33,14 @@ div#panel * {
     border: 2px solid #7289da;
 }
 
-select#selectedkanji {
-    width: 43px;
+#panel>select {
     height: 23px;
 }
 
-option {
+#selectedunit>option {
+    font-size: 125%;
+}
+
+#selectedkanji>option {
     font-size: 200%;
 }

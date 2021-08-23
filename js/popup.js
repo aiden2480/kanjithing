@@ -6,6 +6,16 @@ var eraseall = document.getElementById("eraseall");
 var selectedkanji = document.getElementById("selectedkanji");
 var ctx = canvas.getContext("2d");
 
+/* TODO: Find a better home for this variable */
+var wakattaunits = [
+    "学校名前父母生高姉妹兄弟住所色",
+    "好同紙英語何年私友行毎教場",
+    "早新家入出思来島午後朝夜牛魚族",
+    "会社持待道近町番屋店駅神様区",
+    "時間国先長話見言休聞今食勉強",
+];
+wakattaunits.unshift(wakattaunits.join(""));
+
 /* Main function to load a selected kanji */
 function loadKanji(kanji) {
     // TODO Check if the kanji isn't in dropdown list, and add it if so.
@@ -39,12 +49,15 @@ function loadKanjiSet(set, replace=true) {
         elem.textContent = set[index];
         selectedkanji.appendChild(elem);
     };
+
+    loadKanji(set[0]);
 }
 
 /* Add event listeners for the various elements */
 window.addEventListener("load", () => {
     // Load the selected kanji once prepared
-    loadKanjiSet("時間国先長話見言休聞今食勉強");
+    loadKanjiSet(wakattaunits[selectedunit.value]);
+    
     chrome.storage.local.get(["current"], result => {
         selectedkanji.value = result.current;
         loadKanji(result.current);
@@ -54,6 +67,11 @@ window.addEventListener("load", () => {
 selectedkanji.addEventListener("change", () => {
     // Load the selected kanji upon dropdown value change
     loadKanji(selectedkanji.value);
+});
+
+selectedunit.addEventListener("change", () => {
+    // Load the selected unit upon dropdown value change
+    loadKanjiSet(wakattaunits[selectedunit.value]);
 });
 
 video.addEventListener("play", () => {
