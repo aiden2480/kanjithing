@@ -28,8 +28,10 @@ $ curl http://kanjithing-backend.chocolatejade42.repl.co/kanji/車 --location
 - [ ] Make the user guess readings of kanji in words
 - [ ] Scoreboard somehow
 - [ ] Update indicator
-- [ ] Select a kanji grade to learn or a wakatta unit
 - [ ] Offline cache/compatability
     * might not be possible with the small amount of storage space allowed to chrome extensions
+- [ ] Buttons to select the next/previous/random kanji in set
 - [x] Fix dependency on RapidAPI
     - [kanjialive-backend on repl.it](https://replit.com/@chocolatejade42/kanjithing-backend)
+- [x] Select a kanji grade to learn or a wakatta unit
+    - Added wakatta unit selection in version [`d35a6bc`](https://github.com/aiden2480/kanjithing/commit/d35a6bc)
