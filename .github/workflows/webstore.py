@@ -165,5 +165,4 @@ if __name__ == "__main__":
         error = upload["itemError"][0]
         raise ChromeWebstoreStupid(error["error_code"] + ": " + error["error_detail"])
 
-
     publish_package(sess)
