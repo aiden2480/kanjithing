@@ -13,7 +13,7 @@ You can practise drawing kanji featured in the Wakatta units. That's pretty much
 > The extension is available in the [google chrome store](https://chrome.google.com/webstore/detail/nccfelhkfpbnefflolffkclhenplhiab), though it can be installed from source with the following instructions
 
 1. [Download the repository as a zip](https://github.com/aiden2480/kanjithing/zipball/main) and extract
-2. Navigate to [chrome://extensions](chrome://extensions)
+2. Navigate to [`chrome://extensions`](chrome://extensions)
 3. Ensure that the `Developer mode` switch is enabled in the top right of your screen
 4. Click `Load unpacked` in the top left corner of the screen
 5. Select the folder containing the extension in the popup modal
@@ -22,6 +22,8 @@ You can practise drawing kanji featured in the Wakatta units. That's pretty much
 Google chrome will automatically update the extension as I publish new updates if you install from the chrome store.
 If installing from this repository, `git clone` this repository and then run `git pull origin master` yourself.
 You'll need to go back into the [chrome extension settings](chrome://extensions) and press the refresh icon next to the extension to reload.
+
+I'm using a [custom GitHub action](.github\workflows\updatewebstore.yml) to automatically publish new versions of the extension to the chrome store every time I change the `version` parameter in the `manifest.json` file.
 
 ## :file_cabinet: API
 The kanji drawing guide videos are sourced from [KanjiAlive](https://app.kanjialive.com/api/docs), and cached using a [middleman I created](https://replit.com/@chocolatejade42/kanjithing-backend) (as RapidAPI limits requests). 
