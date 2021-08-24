@@ -1,0 +1,26 @@
+name: Publish to chrome webstore
+
+on:
+  push:
+    paths:
+      - manifest.json
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    name: Publish to chrome webstore
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Setup Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install dependencies
+        run: pip install requests
+      
+      - name: Run uploader file
+        run: python .github/workflows/webstore.py

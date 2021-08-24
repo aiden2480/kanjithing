@@ -1,0 +1,21 @@
+{
+  repository(owner: "aiden2480", name: "kanjithing") {
+    defaultBranchRef {
+      target {
+        ... on Commit {
+          history(first: 5) {
+            nodes {
+              file(path: "manifest.json") {
+                object {
+                  ... on Blob {
+                    text abbreviatedOid
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
