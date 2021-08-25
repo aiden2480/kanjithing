@@ -15,10 +15,10 @@
     
     <!-- Panel beneath canvas/video thing -->
     <div id="panel">
-        <input type="button" id="playpause" value="&#9208;"></input>
-        <input type="button" id="eraseall" value="&#128465;&#65039;"></input>
+        <input type="button" id="playpause" title="Play/pause the animation" value="&#9208;"></input>
+        <input type="button" id="eraseall" title="Erase your drawing" value="&#128465;&#65039;"></input>
         
-        <select id="selectedunit">
+        <select id="selectedunit" title="Select a Wakatta unit to learn kanji from">
             <!-- Wakatta units containing their own kanji sets -->
             <option value="0">All units</option>
             <option value="1">Unit one</option>
@@ -27,7 +27,7 @@
             <option value="4">Unit four</option>
             <option value="5" selected>Unit five</option>
         </select>
-        <select id="selectedkanji">
+        <select id="selectedkanji" title="Select a kanji to learn">
             <!-- Kanji sets are loaded in through the loadKanjiSet function -->
         </select>
     </div>

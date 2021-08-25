@@ -26,6 +26,7 @@ div#panel {
 }
 
 div#panel * {
+    border-radius: 3px;
     margin: 5px 0px 0px 5px;
     display: inline-block;
     background-color: #36393e;
