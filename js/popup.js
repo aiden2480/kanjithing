@@ -22,17 +22,17 @@ function loadKanji(kanji) {
     console.log(`loading kanji ${kanji}.`);
     eraseall.click();
 
+    // Update saved kanji in database
+    chrome.storage.local.set({ "selectedkanji": kanji }, () => {
+        console.log(`Saved current kanji %c${kanji}`, "color: #7289da");
+    });
+
     // Get video URL and set source
     video.src = "/media/loading.png";
     getKanjiVideoURL(kanji).then(url => {
         console.log(`setting video url to ${url}`);
         video.src = url;
     })
-
-    // Update in chrome storage
-    chrome.storage.local.set({current: kanji}, () => {
-        console.log("set chrome thing");
-    });
 
     // Update browser icon
     chrome.runtime.sendMessage({
@@ -41,9 +41,16 @@ function loadKanji(kanji) {
     });
 }
 
-function loadKanjiSet(set, replace=true) {
+function loadKanjiSet(setindex, defaultkanji=null, replace=true) {
+    var set = wakattaunits[parseInt(setindex)];
     if (replace) selectedkanji.innerHTML = "";
+    console.log({ set });
     
+    // Update current unit in database
+    chrome.storage.local.set({ "selectedunit": setindex }, () => {
+        console.log(`Saved current set %c${setindex}`, "color: lightgreen");
+    });
+
     for (let index in set) {
         let elem = document.createElement("option");
         
@@ -51,17 +58,21 @@ function loadKanjiSet(set, replace=true) {
         selectedkanji.appendChild(elem);
     };
 
-    loadKanji(set[0]);
+    // Load the kanji
+    defaultkanji ? loadKanji(defaultkanji) : loadKanji(set[0]);
 }
 
 /* Add event listeners for the various elements */
 window.addEventListener("load", () => {
     // Load the selected kanji once prepared
-    loadKanjiSet(wakattaunits[selectedunit.value]);
-    
-    chrome.storage.local.get(["current"], result => {
-        selectedkanji.value = result.current;
-        loadKanji(result.current);
+    chrome.storage.local.get(["selectedunit", "selectedkanji"], result => {
+        console.log("hai", result.selectedunit, result.selectedkanji);
+        let unit = result.selectedunit || wakattaunits.length - 1;
+        let kanji = result.selectedkanji || wakattaunits[unit][0];
+
+        loadKanjiSet(parseInt(unit), kanji);
+        selectedunit.value = unit;
+        selectedkanji.value = kanji;
     });
 });
 
@@ -72,12 +83,12 @@ selectedkanji.addEventListener("change", () => {
 
 selectedunit.addEventListener("change", () => {
     // Load the selected unit upon dropdown value change
-    loadKanjiSet(wakattaunits[selectedunit.value]);
+    loadKanjiSet(selectedunit.value);
 });
 
 video.addEventListener("play", () => {
     // Sets the options for the video element (once only)
-    video.playbackRate = 0.8;
+    video.playbackRate = 0.85;
     canvas.width = video.offsetWidth;
     canvas.height = video.offsetHeight;
 }, {once: true});

@@ -1,5 +1,5 @@
-/* Store the current kanji */
-var current = "時";
+/* Save the current kanji */
+var current;
 
 /* Set up a listener so we can receive messages from the console */
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
@@ -11,6 +11,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
             break;
         case "setIcon":
             setBrowserIcon(message.data);
+            break;
         default:
             break;
     }
@@ -18,21 +19,14 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 
 /* Set up a listener for when the extension is installed */
 chrome.runtime.onInstalled.addListener(reason => {
-    console.log("oh shit this actually fired", reason);
-
-    // Set current kanji to default
-    chrome.storage.local.set({ current }, () => {
-        console.log("Set default kanji to", current);
-    });
-
-    setBrowserIcon(current, true);
+    console.log("Install event fired with", reason);
     chrome.runtime.setUninstallURL("https://kanjithing-backend.chocolatejade42.repl.co/uninstall");
 });
 
 /* Script to change the browser icon */
-function setBrowserIcon(kanji, bypass=false) {
+function setBrowserIcon(kanji) {
     // https://jsfiddle.net/1u37ovj9/
-    if (current === kanji && !bypass) return;
+    if (current === kanji) return;
 
     var canvas = new OffscreenCanvas(64, 64);
     var context = canvas.getContext("2d");
