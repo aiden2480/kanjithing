@@ -46,7 +46,7 @@ def compare_manifest_versions() -> tuple[Version]:
 
     # Setup request variables
     with open(".github/workflows/query.gql") as fp:
-        token = os.environ["GH_AUTH_TOKEN"]
+        token = os.environ["GITHUB_TOKEN"]
         headers = {"Authorization": f"Bearer {token}"}
         body = {"query": fp.read()}
 
