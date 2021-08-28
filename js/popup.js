@@ -23,6 +23,7 @@ function loadKanji(kanji) {
     eraseall.click();
 
     // Get video URL and set source
+    video.src = "/media/loading.png";
     getKanjiVideoURL(kanji).then(url => {
         console.log(`setting video url to ${url}`);
         video.src = url;
