@@ -25,6 +25,7 @@ import time
 import json
 import zipfile
 import requests
+from packaging.version import Version
 
 # Chrome webstore URLs
 PACKAGE_ID = "nccfelhkfpbnefflolffkclhenplhiab"
@@ -37,7 +38,7 @@ class ChromeWebstoreStupid(Exception):
     pass
 
 # Main program functions
-def compare_manifest_versions() -> tuple:
+def compare_manifest_versions() -> tuple[Version]:
     """
     Compares the manifest in this git commit with the one in the previous
     commit. Returns the two version values.
@@ -53,12 +54,16 @@ def compare_manifest_versions() -> tuple:
     resp = requests.post("https://api.github.com/graphql", json=body, headers=headers)
     data = resp.json()["data"]
 
-    # Parse first and last data
+    # Find first and last version data
     nodes = data["repository"]["defaultBranchRef"]["target"]["history"]["nodes"]
     first = json.loads(nodes[0]["file"]["object"]["text"])
     last = json.loads(nodes[-1]["file"]["object"]["text"])
 
-    return first["version"], last["version"]
+    # Parse strings and return
+    new = Version(first["version"])
+    old = Version(last["version"])
+
+    return old, new
 
 def generate_chrome_access_token() -> str:
     """
@@ -143,14 +148,22 @@ def publish_package(sess: requests.Session) -> dict:
 
 if __name__ == "__main__":
     # Check if the manifest versions are the same
-    first, last = compare_manifest_versions()
+    old, new = compare_manifest_versions()
+
+    print("Manifest versions")
+    print(f" * {old} -> {new}")
     
-    if first == last:
-        print(f"No manifest version change detected ({first})")
+    if old == new:
+        print("Manifest version not changed")
         exit(0)
     
-    print(f"Updating webstore package from {first} -> {last}")
-
+    elif not (new.major > old.major or new.minor > old.minor):
+        print(f"No major or minor manifest version change detected")
+        exit(0)
+    
+    else:
+        print("Updating webstore application")
+    
     # Create our session object and generate an access token
     sess = requests.Session()
     sess.headers.update({
