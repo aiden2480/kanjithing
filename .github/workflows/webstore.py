@@ -147,6 +147,14 @@ def publish_package(sess: requests.Session) -> dict:
 
 
 if __name__ == "__main__":
+    # Load dotenv if locally testing
+    try:
+        import dotenv
+    except ModuleNotFoundError:
+        pass
+    finally:
+        dotenv.load_dotenv()
+
     # Check if the manifest versions are the same
     old, new = compare_manifest_versions()
 
@@ -178,4 +186,5 @@ if __name__ == "__main__":
         error = upload["itemError"][0]
         raise ChromeWebstoreStupid(error["error_code"] + ": " + error["error_detail"])
 
+    exit(0)
     publish_package(sess)
