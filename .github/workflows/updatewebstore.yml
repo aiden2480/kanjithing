@@ -20,7 +20,7 @@ jobs:
           python-version: 3.8
 
       - name: Install dependencies
-        run: pip install requests
+        run: pip install requests packaging
       
       - name: Run uploader file
         run: python .github/workflows/webstore.py
