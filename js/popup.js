@@ -19,18 +19,15 @@ wakattaunits.unshift(wakattaunits.join(""));
 /* Main function to load a selected kanji */
 function loadKanji(kanji) {
     // TODO Check if the kanji isn't in dropdown list, and add it if so.
-    console.log(`loading kanji ${kanji}.`);
+    console.log(`Loading kanji %c${kanji}`, "color: #3498db");
     eraseall.click();
 
     // Update saved kanji in database
-    chrome.storage.local.set({ "selectedkanji": kanji }, () => {
-        console.log(`Saved current kanji %c${kanji}`, "color: #7289da");
-    });
+    chrome.storage.local.set({ "selectedkanji": kanji });
 
     // Get video URL and set source
     video.src = "/media/loading.png";
     getKanjiVideoURL(kanji).then(url => {
-        console.log(`setting video url to ${url}`);
         video.src = url;
     })
 
@@ -41,15 +38,14 @@ function loadKanji(kanji) {
     });
 }
 
-function loadKanjiSet(setindex, defaultkanji=null, replace=true) {
+function loadKanjiSet(setindex, defaultkanji=null) {
     var set = wakattaunits[parseInt(setindex)];
-    if (replace) selectedkanji.innerHTML = "";
-    console.log({ set });
+
+    console.log(`Loading set %c${setindex} %c${set}`, "color: #9b59b6", "color: #2ecc71");
+    selectedkanji.innerHTML = "";
     
     // Update current unit in database
-    chrome.storage.local.set({ "selectedunit": setindex }, () => {
-        console.log(`Saved current set %c${setindex}`, "color: lightgreen");
-    });
+    chrome.storage.local.set({ "selectedunit": setindex });
 
     for (let index in set) {
         let elem = document.createElement("option");
@@ -66,7 +62,7 @@ function loadKanjiSet(setindex, defaultkanji=null, replace=true) {
 window.addEventListener("load", () => {
     // Load the selected kanji once prepared
     chrome.storage.local.get(["selectedunit", "selectedkanji"], result => {
-        console.log("hai", result.selectedunit, result.selectedkanji);
+        console.log(`Retrieved from storage %cset ${result.selectedunit} %ckanji ${result.selectedkanji}`, "color: #e67e22", "color: #fee75c");
         let unit = result.selectedunit || wakattaunits.length - 1;
         let kanji = result.selectedkanji || wakattaunits[unit][0];
 
