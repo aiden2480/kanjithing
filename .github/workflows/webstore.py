@@ -147,6 +147,14 @@ def publish_package(sess: requests.Session) -> dict:
 
 
 if __name__ == "__main__":
+    # Load dotenv if locally testing
+    try:
+        import dotenv
+    except ModuleNotFoundError:
+        pass
+    else:
+        dotenv.load_dotenv()
+
     # Check if the manifest versions are the same
     old, new = compare_manifest_versions()
 
