@@ -152,7 +152,7 @@ if __name__ == "__main__":
         import dotenv
     except ModuleNotFoundError:
         pass
-    finally:
+    else:
         dotenv.load_dotenv()
 
     # Check if the manifest versions are the same
@@ -186,5 +186,4 @@ if __name__ == "__main__":
         error = upload["itemError"][0]
         raise ChromeWebstoreStupid(error["error_code"] + ": " + error["error_detail"])
 
-    exit(0)
     publish_package(sess)
