@@ -12,7 +12,8 @@ jobs:
     name: Publish to chrome webstore
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Clone repository
+        uses: actions/checkout@v2
       
       - name: Setup Python
         uses: actions/setup-python@v2
