@@ -43,6 +43,7 @@ def compare_manifest_versions() -> tuple[Version]:
     Compares the manifest in this git commit with the one in the previous
     commit. Returns the two version values.
     """
+    # TODO: Doesn't run if the version wasn't changed in the last commit
 
     # Setup request variables
     with open(".github/workflows/query.gql") as fp:
@@ -72,7 +73,7 @@ def generate_chrome_access_token() -> str:
     the "refresh_token" variable. For details on retreiving these secrets, see:
 
     https://github.com/DrewML/chrome-webstore-upload/blob/master/How%20to%20generate%20Google%20API%20keys.md
-    """ # TODO Where did this link come from what
+    """
 
     data = {
         "client_id": os.environ["CHROME_CLIENT_ID"],
