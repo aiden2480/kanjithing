@@ -26,10 +26,11 @@ function loadKanji(kanji) {
     chrome.storage.local.set({ "selectedkanji": kanji });
 
     // Get video URL and set source
+    vidloading = true;
     video.src = "/media/loading.png";
     getKanjiVideoURL(kanji).then(url => {
         video.src = url;
-    })
+    });
 
     // Update browser icon
     chrome.runtime.sendMessage({
@@ -70,6 +71,12 @@ window.addEventListener("load", () => {
         selectedunit.value = unit;
         selectedkanji.value = kanji;
     });
+});
+
+video.addEventListener("loadeddata", () => {
+    // Update `vidloading` state when content has finished loading
+    eraseall.click();
+    vidloading = false;
 });
 
 selectedkanji.addEventListener("change", () => {
