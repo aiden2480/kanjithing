@@ -24,6 +24,7 @@ function loadKanji(kanji) {
 
     // Update saved kanji in database
     chrome.storage.local.set({ "selectedkanji": kanji });
+    document.getElementById("selectedkanjidetails").textContent = kanji;
 
     // Get video URL and set source
     vidloading = true;

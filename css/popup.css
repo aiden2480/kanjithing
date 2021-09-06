@@ -1,7 +1,32 @@
 body {
-    width: 250px;
+    width: 625px;
     height: 272px;
+    color: #7289da;
     background-color: #36393e;
+}
+
+/* Main div styling */
+div#drawsection {
+    width: 248px;
+    height: 248px;
+    float: left;
+}
+
+div#sectiondivider {
+    float: left;
+    width: 1px;
+    height: 100%;
+    border-left: 3px dotted #7289da;
+    margin: 0px 6px 0px 6px;
+}
+
+div#infosection {
+    float: left;
+}
+
+/* Kanji info div */
+span#selectedkanjidetails {
+    color: #6665d2;
 }
 
 /* Canvas and video */
