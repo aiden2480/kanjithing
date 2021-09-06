@@ -64,10 +64,10 @@ window.addEventListener("load", () => {
     // Load the selected kanji once prepared
     chrome.storage.local.get(["selectedunit", "selectedkanji"], result => {
         console.log(`Retrieved from storage %cset ${result.selectedunit} %ckanji ${result.selectedkanji}`, "color: #e67e22", "color: #fee75c");
-        let unit = result.selectedunit || wakattaunits.length - 1;
+        let unit = parseInt(result.selectedunit) || wakattaunits.length - 1;
         let kanji = result.selectedkanji || wakattaunits[unit][0];
 
-        loadKanjiSet(parseInt(unit), kanji);
+        loadKanjiSet(unit, kanji);
         selectedunit.value = unit;
         selectedkanji.value = kanji;
     });
