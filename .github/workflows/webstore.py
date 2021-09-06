@@ -21,6 +21,7 @@ Note: this file should be executed from the root directory, not ./github/workflo
 
 import io
 import os
+import re
 import time
 import json
 import zipfile
@@ -91,18 +92,16 @@ def generate_zipfile() -> io.BytesIO:
     chrome webstore. The zipped file is stored in memory, in a BytesIO object
     """
     
-    buffer = io.BytesIO()
-    zipped = zipfile.ZipFile(buffer, "w")
-    skipfils = [".git\\", ".github\\", ".gitignore", "README.md"]
     print("\nGenerating zip file")
+    zipped = zipfile.ZipFile(buffer := io.BytesIO(), "w")
+    pattern = re.compile(r".\\(.git\\|.github\\|.gitignore|README.md)")
 
     for root, dirs, files in os.walk("."):
         for name in files:
             concat = os.path.join(root, name)
             
-            # TODO Find a better way to compare
-            if list(filter(lambda i: concat.startswith(".\\" + i), skipfils)):
-                continue
+            if re.match(pattern, concat):
+                continue # Skip certain files and dirs
             
             print("* zipping", concat)
             zipped.write(concat)
