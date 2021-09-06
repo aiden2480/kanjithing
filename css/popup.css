@@ -24,9 +24,33 @@ div#infosection {
     float: left;
 }
 
+div#infosection * {
+    margin: 0px;
+}
+
+div#infosection > *:not(h1) {
+    font-size: 20px;
+}
+
+#exampleslist {
+    padding-left: 25px;
+}
+
 /* Kanji info div */
 span#selectedkanjidetails {
     color: #6665d2;
+}
+
+#detailslist {
+    padding-left: 25px;
+}
+
+#detailslist li {
+    font-size: 175%;
+}
+
+.article {
+    font-weight: bold;
 }
 
 /* Canvas and video */

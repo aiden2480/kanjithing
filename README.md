@@ -47,6 +47,8 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
 - [ ] Buttons to select the next/previous/random kanji in set
 - [ ] Auto create and publish releases on GitHub when manifest version changes
 - [ ] Load custom kanji sets
+- [ ] Clean up and potentially seperate the css into separate files
+- [ ] Cache responses returned from the server in local storage
 - [x] Fix dependency on RapidAPI
     - [kanjialive-backend on repl.it](https://replit.com/@chocolatejade42/kanjithing-backend)
 - [x] Select a kanji grade to learn or a wakatta unit
