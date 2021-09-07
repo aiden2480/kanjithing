@@ -62,13 +62,6 @@ span#selectedkanjidetails {
     font-size: 175%;
 }
 
-#readingsparent {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    width: 100%;
-}
-
 #articlecontainer { position: relative; }
 #articlecontainer > .article { display: inline-block; }
 #articlecontainer > .article > * { font-weight: bold; font-size: 90%; }
