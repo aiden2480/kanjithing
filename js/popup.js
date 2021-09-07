@@ -139,7 +139,6 @@ async function populateInformation(kanji) {
     var baseurl = "https://kanjithing-backend.chocolatejade42.repl.co/kanji/";
     var resp = await fetch(baseurl + encodeURI(kanji));
     var json = await resp.json();
-    console.debug(json);
 
     // Establish readings
     var on = json.onyomi_ja ? json.onyomi_ja.split("、") : [];
