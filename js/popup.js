@@ -155,6 +155,11 @@ async function populateInformation(kanji) {
     document.getElementById("grade").innerText = json.kgrade;
     document.getElementById("onkunyomi").innerText = readings;
 
+    // Add title to reading parent element
+    var parent = document.getElementById("onkunyomi").parentElement;
+    parent.title = `おん：${json.onyomi_ja || "none"}\nくん：${json.kunyomi_ja || "none"}\n\n`;
+    parent.title += "Onyomi are in katakana, while kunyomi are in hiragana";
+
     // Populate examples
     listelem.textContent = "";
     json.examples.splice(0, 6).map(item => {
