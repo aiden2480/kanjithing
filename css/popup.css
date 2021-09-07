@@ -1,8 +1,70 @@
 body {
-    width: 250px;
+    width: 660px;
     height: 272px;
+    color: #7289da;
     background-color: #36393e;
 }
+
+/* Main div styling */
+div#drawsection {
+    width: 248px;
+    height: 248px;
+    float: left;
+}
+
+div#sectiondivider {
+    float: left;
+    width: 1px;
+    height: 100%;
+    border-left: 3px dotted #7289da;
+    margin: 0px 6px 0px 6px;
+}
+
+div#infosection {
+    float: left;
+    /* width: 408px; */
+    width: 396px;
+}
+
+div#infosection * {
+    margin: 0px;
+}
+
+div#infosection > *:not(h1) {
+    font-size: 20px;
+}
+
+#exampleslist {
+    padding-left: 5px;
+}
+
+#exampleslist li b {
+    margin-left: -10px;
+}
+
+#exampleslist * {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    list-style-position: inside;
+}
+
+/* Kanji info div */
+span#selectedkanjidetails {
+    color: #6665d2;
+}
+
+#detailslist {
+    padding-left: 25px;
+}
+
+#detailslist li {
+    font-size: 175%;
+}
+
+#articlecontainer { position: relative; }
+#articlecontainer > .article { display: inline-block; }
+#articlecontainer > .article > * { font-weight: bold; font-size: 90%; }
 
 /* Canvas and video */
 video#kanjiguide {

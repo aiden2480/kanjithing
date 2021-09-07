@@ -22,6 +22,9 @@ function loadKanji(kanji) {
     console.log(`Loading kanji %c${kanji}`, "color: #3498db");
     eraseall.click();
 
+    // Load in examples
+    populateInformation(kanji);
+
     // Update saved kanji in database
     chrome.storage.local.set({ "selectedkanji": kanji });
 
@@ -117,6 +120,7 @@ eraseall.addEventListener("click", () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 });
 
+/* API call functions */
 async function getKanjiVideoURL(kanji) {
     // TODO Error handling in case replit decides it wants to break :(
     var baseurl = "https://kanjithing-backend.chocolatejade42.repl.co/kanji/";
@@ -128,4 +132,43 @@ async function getKanjiVideoURL(kanji) {
     }
 
     return json.video;
+};
+
+async function populateInformation(kanji) {
+    var listelem = document.getElementById("exampleslist");
+    var baseurl = "https://kanjithing-backend.chocolatejade42.repl.co/kanji/";
+    var resp = await fetch(baseurl + encodeURI(kanji));
+    var json = await resp.json();
+
+    // Establish readings
+    var on = json.onyomi_ja ? json.onyomi_ja.split("、") : [];
+    var kun = json.kunyomi_ja ? json.kunyomi_ja.split("、") : [];
+    var readings = on.concat(kun).join("、");
+
+    // Populate kanji details
+    document.getElementById("selectedkanjidetails").textContent = kanji;
+    document.getElementById("selectedkanjimeaning").textContent = json.kmeaning;
+    document.getElementById("strokecount").innerText = json.kstroke;
+    document.getElementById("grade").innerText = json.kgrade;
+    document.getElementById("onkunyomi").innerText = readings;
+
+    // Add title to reading parent element
+    var parent = document.getElementById("onkunyomi").parentElement;
+    parent.title = `おん：${json.onyomi_ja || "none"}\nくん：${json.kunyomi_ja || "none"}\n\n`;
+    parent.title += "Onyomi are in katakana, while kunyomi are in hiragana";
+
+    // Populate examples
+    listelem.textContent = "";
+    json.examples.splice(0, 6).map(item => {
+        let elem = document.createElement("li");
+        let reading = document.createElement("b");
+        let meaning = document.createTextNode(item[1]);
+        reading.innerText = item[0];
+
+        elem.appendChild(reading);
+        elem.appendChild(meaning);
+        elem.title = item[0] + item[1];
+
+        listelem.appendChild(elem);
+    });
 };

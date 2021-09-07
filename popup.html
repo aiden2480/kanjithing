@@ -5,34 +5,52 @@
     <link rel="stylesheet" href="css/popup.css">
 </head>
 <body>
-    <div id="drawcontainer">
-        <video id="kanjiguide" draggable="false" width="248" height="248" poster="/media/loading.png" autoplay>
-            Your browser does not support the video element.
-            You really need to install a better browser &#128533;
-        </video>
-        <canvas id="drawcanvas" width="248" height="248">
-            Your browser does not support the canvas element.
-            You really need to install a better browser &#128533;
-        </canvas>
-    </div>
-    
-    <!-- Panel beneath canvas/video thing -->
-    <div id="panel">
-        <input type="button" id="playpause" title="Play/pause the animation" value="&#9208;"></input>
-        <input type="button" id="eraseall" title="Erase your drawing" value="&#128465;&#65039;"></input>
+    <div id="drawsection">
+        <div id="drawcontainer">
+            <video id="kanjiguide" draggable="false" width="248" height="248" poster="/media/loading.png" autoplay>
+                Your browser does not support the video element.
+                You really need to install a better browser &#128533;
+            </video>
+            <canvas id="drawcanvas" width="248" height="248">
+                Your browser does not support the canvas element.
+                You really need to install a better browser &#128533;
+            </canvas>
+        </div>
         
-        <select id="selectedunit" title="Select a Wakatta unit to learn kanji from">
-            <!-- Wakatta units containing their own kanji sets -->
-            <option value="0">All units</option>
-            <option value="1">Unit one</option>
-            <option value="2">Unit two</option>
-            <option value="3">Unit three</option>
-            <option value="4">Unit four</option>
-            <option value="5">Unit five</option>
-        </select>
-        <select id="selectedkanji" title="Select a kanji to learn">
-            <!-- Kanji sets are loaded in through the loadKanjiSet function -->
-        </select>
+        <!-- Panel beneath canvas/video thing -->
+        <div id="panel">
+            <input type="button" id="playpause" title="Play/pause the animation" value="&#9208;"></input>
+            <input type="button" id="eraseall" title="Erase your drawing" value="&#128465;&#65039;"></input>
+            
+            <select id="selectedunit" title="Select a Wakatta unit to learn kanji from">
+                <!-- Wakatta units containing their own kanji sets -->
+                <option value="0">All units</option>
+                <option value="1">Unit one</option>
+                <option value="2">Unit two</option>
+                <option value="3">Unit three</option>
+                <option value="4">Unit four</option>
+                <option value="5">Unit five</option>
+            </select>
+            <select id="selectedkanji" title="Select a kanji to learn">
+                <!-- Kanji sets are loaded in through the loadKanjiSet function -->
+            </select>
+        </div>
+    </div>
+
+    <div id="sectiondivider">
+        <!-- A vertical divider bar to seperate the sections -->
+    </div>
+
+    <div id="infosection">
+        <h1><span id="selectedkanjidetails"></span> <span id="selectedkanjimeaning"></span></h1>
+        <div id="articlecontainer">
+            <span class="article">Readings <span id="onkunyomi"></span></span>
+            <span class="article">Strokes <span id="strokecount"></span> Grade <span class="article" id="grade"></span></span>
+        </div>
+
+        <ul id="exampleslist">
+            <!-- This list will be populated with examples from the API -->
+        </ul>
     </div>
 
     <!-- Scripts -->
