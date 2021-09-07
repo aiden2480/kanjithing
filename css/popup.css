@@ -1,5 +1,5 @@
 body {
-    width: 625px;
+    width: 660px;
     height: 272px;
     color: #7289da;
     background-color: #36393e;
@@ -22,6 +22,8 @@ div#sectiondivider {
 
 div#infosection {
     float: left;
+    /* width: 408px; */
+    width: 396px;
 }
 
 div#infosection * {
@@ -49,9 +51,9 @@ span#selectedkanjidetails {
     font-size: 175%;
 }
 
-.article {
-    font-weight: bold;
-}
+#articlecontainer { position: relative; }
+#articlecontainer > .article { display: inline-block; }
+#articlecontainer > .article > * { font-weight: bold; font-size: 90%; }
 
 /* Canvas and video */
 video#kanjiguide {

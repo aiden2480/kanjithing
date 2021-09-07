@@ -43,9 +43,14 @@
 
     <div id="infosection">
         <h1><span id="selectedkanjidetails"></span> <span id="selectedkanjimeaning"></span></h1>
-        <p>Strokes <span class="article" id="strokecount"></span> Grade <span class="article" id="grade"></span> Readings <span class="article" id="onkunyomi"></span></p>
-        
-        <ul id="exampleslist"></ul>
+        <div id="articlecontainer">
+            <span class="article">Readings <span id="onkunyomi"></span></span>
+            <span class="article">Strokes <span id="strokecount"></span> Grade <span class="article" id="grade"></span></span>
+        </div>
+
+        <ul id="exampleslist">
+            <!-- This list will be populated with examples from the API -->
+        </ul>
     </div>
 
     <!-- Scripts -->
