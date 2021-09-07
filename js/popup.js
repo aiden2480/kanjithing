@@ -142,8 +142,8 @@ async function populateInformation(kanji) {
     var json = await resp.json();
 
     // Establish readings
-    var on = json.onyomi_ja.split("、");
-    var kun = json.kunyomi_ja.split("、");
+    var on = json.onyomi_ja ? json.onyomi_ja.split("、") : [];
+    var kun = json.kunyomi_ja ? json.kunyomi_ja.split("、") : [];
     var readings = on.concat(kun).join("、");
 
     // if (readings !=== readings.splice(0, )); // TODO: Splice readings
