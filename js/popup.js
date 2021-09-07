@@ -146,8 +146,6 @@ async function populateInformation(kanji) {
     var kun = json.kunyomi_ja ? json.kunyomi_ja.split("、") : [];
     var readings = on.concat(kun).join("、");
 
-    // if (readings !=== readings.splice(0, )); // TODO: Splice readings
-
     // Populate kanji details
     document.getElementById("selectedkanjidetails").textContent = kanji;
     document.getElementById("selectedkanjimeaning").textContent = json.kmeaning;
@@ -170,6 +168,8 @@ async function populateInformation(kanji) {
 
         elem.appendChild(reading);
         elem.appendChild(meaning);
+        elem.title = item[0] + item[1];
+
         listelem.appendChild(elem);
     });
 };

@@ -35,7 +35,18 @@ div#infosection > *:not(h1) {
 }
 
 #exampleslist {
-    padding-left: 25px;
+    padding-left: 5px;
+}
+
+#exampleslist li b {
+    margin-left: -10px;
+}
+
+#exampleslist * {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    list-style-position: inside;
 }
 
 /* Kanji info div */
