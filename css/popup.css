@@ -30,6 +30,15 @@ div#infosection * {
     margin: 0px;
 }
 
+#infosection.offline, #infosection #offlineindicator {
+    height: 0px;
+    visibility: hidden;
+}
+
+#infosection.offline #offlineindicator {
+    visibility: visible;
+}
+
 div#infosection > *:not(h1) {
     font-size: 20px;
 }

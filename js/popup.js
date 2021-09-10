@@ -125,8 +125,16 @@ async function fetchKanjiDetails(kanji) {
     // Make request for resource - either cache or online
     var baseurl = "https://kanjithing-backend.chocolatejade42.repl.co";
     var version = chrome.app.getDetails().version;
-    var resp = await fetch(`${baseurl}/kanji/${encodeURI(kanji)}?q=${version}`);
-    var json = await resp.json();
+    var infosection = document.getElementById("infosection");
+    
+    try {
+        var resp = await fetch(`${baseurl}/kanji/${encodeURI(kanji)}?q=${version}`);
+        var json = await resp.json();
+        infosection.classList.remove("offline");
+    } catch (error) {
+        infosection.classList.add("offline");
+        return {};
+    }
 
     if (json.status !== 200) {
         console.error(json.error, resp);
@@ -160,7 +168,7 @@ async function populateInformation(kanji) {
 
     // Populate examples
     listelem.textContent = "";
-    json.examples.splice(0, 6).map(item => {
+    (json.examples || []).splice(0, 6).map(item => {
         let elem = document.createElement("li");
         let reading = document.createElement("b");
         let meaning = document.createTextNode(item[1]);
