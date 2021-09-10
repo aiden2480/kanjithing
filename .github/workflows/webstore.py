@@ -26,6 +26,7 @@ import time
 import json
 import zipfile
 import requests
+import argparse
 from packaging.version import Version
 
 # Chrome webstore URLs
@@ -94,7 +95,7 @@ def generate_zipfile() -> io.BytesIO:
     
     print("\nGenerating zip file")
     zipped = zipfile.ZipFile(buffer := io.BytesIO(), "w")
-    pattern = re.compile(r".\\(.git\\|.github\\|.gitignore|README.md)")
+    pattern = re.compile(r".\\(.git\\|.github\\|local\\|.gitignore|README.md)")
 
     for root, dirs, files in os.walk("."):
         for name in files:
@@ -159,9 +160,23 @@ if __name__ == "__main__":
     old, new = compare_manifest_versions()
 
     print("Manifest versions")
-    print(f" * {old} -> {new}")
+    print(f" * {old} -> {new}\n")
+
+    # Parse arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--event", type=str, default=None)
+    parser.add_argument("--force", action="store_true", default=False)
+    args = parser.parse_args()
+
+    print(args)
     
-    if old == new:
+    if args.force:
+        print("Forcing update via --force flag")
+    
+    elif args.event == "workflow_dispatch":
+        print("Forcing update via --event workflow_dispatch flag")
+
+    elif old == new:
         print("Manifest version not changed")
         exit(0)
     
