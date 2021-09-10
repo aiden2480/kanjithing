@@ -31,9 +31,9 @@ function loadKanji(kanji) {
     // Get video URL and set source
     vidloading = true;
     video.src = "/media/loading.png";
-    getKanjiVideoURL(kanji).then(url => {
-        video.src = url;
-    });
+    fetchKanjiDetails(kanji).then(details => {
+        video.src = details.video;
+    })
 
     // Update browser icon
     chrome.runtime.sendMessage({
@@ -121,24 +121,25 @@ eraseall.addEventListener("click", () => {
 });
 
 /* API call functions */
-async function getKanjiVideoURL(kanji) {
-    // TODO Error handling in case replit decides it wants to break :(
-    var baseurl = "https://kanjithing-backend.chocolatejade42.repl.co/kanji/";
-    var resp = await fetch(baseurl + encodeURI(kanji));
+async function fetchKanjiDetails(kanji) {
+    // Make request for resource - either cache or online
+    var baseurl = "https://kanjithing-backend.chocolatejade42.repl.co";
+    var version = chrome.app.getDetails().version;
+    var resp = await fetch(`${baseurl}/kanji/${encodeURI(kanji)}?q=${version}`);
     var json = await resp.json();
-    
+
     if (json.status !== 200) {
         console.error(json.error, resp);
+        return;
     }
 
-    return json.video;
-};
+    return json;
+}
 
 async function populateInformation(kanji) {
+    var json = await fetchKanjiDetails(kanji)
     var listelem = document.getElementById("exampleslist");
-    var baseurl = "https://kanjithing-backend.chocolatejade42.repl.co/kanji/";
-    var resp = await fetch(baseurl + encodeURI(kanji));
-    var json = await resp.json();
+    console.debug("populating kanji", kanji, JSON.parse(JSON.stringify(json)));
 
     // Establish readings
     var on = json.onyomi_ja ? json.onyomi_ja.split("、") : [];
