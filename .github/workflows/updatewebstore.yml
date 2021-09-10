@@ -26,7 +26,7 @@ jobs:
         run: pip install requests packaging
       
       - name: Run uploader file
-        run: python .github/workflows/webstore.py
+        run: python .github/workflows/webstore.py --event ${{ github.event_name }}
         env:
           CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
           CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
