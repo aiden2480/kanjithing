@@ -9,7 +9,7 @@ var ctx = canvas.getContext("2d");
 /* TODO: Find a better home for this variable */
 var wakattaunits = [
     "学校名前父母生高姉妹兄弟住所色",
-    "好同紙英語何年私友行毎教場",
+    "好同手紙英語何年私友行毎教場",
     "早新家入出思来島午後朝夜牛魚族",
     "会社持待道近町番屋店駅神様区",
     "時間国先長話見言休聞今食勉強",
@@ -124,7 +124,7 @@ eraseall.addEventListener("click", () => {
 async function fetchKanjiDetails(kanji) {
     // Make request for resource - either cache or online
     var baseurl = "https://kanjithing-backend.chocolatejade42.repl.co";
-    var version = chrome.app.getDetails().version;
+    var version = (await chrome.management.getSelf()).version;
     var infosection = document.getElementById("infosection");
     
     try {
