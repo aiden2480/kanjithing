@@ -1,3 +1,4 @@
+/* Universal styling */
 body {
     width: 660px;
     height: 272px;
@@ -5,7 +6,7 @@ body {
     background-color: #36393e;
 }
 
-/* Main div styling */
+/* Align and specify dimensions for the sections */
 div#drawsection {
     width: 248px;
     height: 248px;
@@ -22,74 +23,18 @@ div#sectiondivider {
 
 div#infosection {
     float: left;
-    /* width: 408px; */
     width: 396px;
 }
 
-div#infosection * {
-    margin: 0px;
-}
-
-#infosection.offline, #infosection #offlineindicator {
-    height: 0px;
-    visibility: hidden;
-}
-
-#infosection.offline #offlineindicator {
-    visibility: visible;
-}
-
-div#infosection > *:not(h1) {
-    font-size: 20px;
-}
-
-#exampleslist {
-    padding-left: 5px;
-}
-
-#exampleslist li b {
-    margin-left: -10px;
-}
-
-#exampleslist * {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    list-style-position: inside;
-}
-
-/* Kanji info div */
-span#selectedkanjidetails {
-    color: #6665d2;
-}
-
-#detailslist {
-    padding-left: 25px;
-}
-
-#detailslist li {
-    font-size: 175%;
-}
-
-#articlecontainer { position: relative; }
-#articlecontainer > .article { display: inline-block; }
-#articlecontainer > .article > * { font-weight: bold; font-size: 90%; }
-
-/* Canvas and video */
-video#kanjiguide {
-    position: absolute;
-}
-
+/* Draw section - video/canvas */
+div#drawcontainer { height: 248px; }
+video#kanjiguide { position: absolute; }
 canvas#drawcanvas {
-    z-index: 10;
     position: absolute;
+    z-index: 10;
 }
 
-div#drawcontainer {
-    height: 248px;
-}
-
-/* Buttons beneath */
+/* Draw section - buttons panel */
 div#panel {
     text-align: center;
     display: flex;
@@ -105,14 +50,36 @@ div#panel * {
     border: 2px solid #7289da;
 }
 
-#panel>select {
-    height: 23px;
+#panel > select { height: 23px; }
+#selectedunit > option { font-size: 125%; }
+#selectedkanji>option { font-size: 200%; }
+
+/* Info section - offline components */
+#infosection.offline, #infosection #offlineindicator {
+    height: 0px;
+    visibility: hidden;
 }
 
-#selectedunit>option {
-    font-size: 125%;
+#infosection.offline #offlineindicator {
+    visibility: visible;
 }
 
-#selectedkanji>option {
-    font-size: 200%;
+/* Info section - Kanji-specific details */
+div#infosection > *:not(h1) { font-size: 20px; }
+div#infosection * { margin: 0px; }
+
+/* Info section - examples */
+div#infosection #exampleslist { padding-left: 5px; }
+div#infosection #exampleslist b { margin-left: -10px; }
+div#infosection #exampleslist * {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    list-style-position: inside;
 }
+
+/* Kanji info div */
+#infosection #selectedkanjidetails { color: #6665d2; }
+#articlecontainer { position: relative; }
+#articlecontainer > .article { display: inline-block; }
+#articlecontainer > .article > * { font-weight: bold; font-size: 90%; }
