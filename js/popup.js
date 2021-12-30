@@ -4,6 +4,7 @@ var video = document.getElementById("kanjiguide");
 var playpause = document.getElementById("playpause");
 var eraseall = document.getElementById("eraseall");
 var selectedkanji = document.getElementById("selectedkanji");
+var randomkanji = document.getElementById("randomkanji");
 var ctx = canvas.getContext("2d");
 
 /* TODO: Find a better home for this variable */
@@ -13,6 +14,13 @@ var wakattaunits = [
     "早新家入出思来島午後朝夜牛魚族",
     "会社持待道近町番屋店駅神様区",
     "時間国先長話見言休聞今食勉強",
+    "帰買電車左右目口書物飲肉昼乗",
+    "曜気分多少元半使天病心楽方作文",
+    "週夏立自赤外西川旅州晩洗持活去",
+    "正冬着安広海古寺東京都北市県",
+    "森山知雪雨字読急洋服動止院漢和",
+    "春秋花南田売耳青白仕事銀犬飯",
+    "林黒羊地夕次体発馬才鳥茶歩鉄"
 ];
 wakattaunits.unshift(wakattaunits.join(""));
 
@@ -21,6 +29,7 @@ function loadKanji(kanji) {
     // TODO Check if the kanji isn't in dropdown list, and add it if so.
     console.log(`Loading kanji %c${kanji}`, "color: #3498db");
     eraseall.click();
+    selectedkanji.value = kanji;
 
     // Load in examples
     populateInformation(kanji);
@@ -119,6 +128,13 @@ eraseall.addEventListener("click", () => {
     // Erases the user's drawing from the canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 });
+
+randomkanji.addEventListener("click", () => {
+    // Load a random kanji from the selected set
+    var set = wakattaunits[selectedunit.value].replace(selectedkanji.value, "");
+    var index = Math.floor(Math.random() * set.length);
+    loadKanji(set[index]);
+})
 
 /* API call functions */
 async function fetchKanjiDetails(kanji) {

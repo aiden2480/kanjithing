@@ -2,7 +2,12 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <title>KanjiThing</title>
     <link rel="stylesheet" href="css/popup.css">
+
+    <!-- Scripts -->
+    <script src="js/popup.js" defer></script>
+    <script src="js/canvas.js" defer></script>
 </head>
 <body>
     <div id="drawsection">
@@ -30,10 +35,19 @@
                 <option value="3">Unit three</option>
                 <option value="4">Unit four</option>
                 <option value="5">Unit five</option>
+                <option value="6">Unit six</option>
+                <option value="7">Unit seven</option>
+                <option value="8">Unit eight</option>
+                <option value="9">Unit nine</option>
+                <option value="10">Unit ten</option>
+                <option value="11">Unit eleven</option>
+                <option value="12">Unit twelve</option>
             </select>
             <select id="selectedkanji" title="Select a kanji to learn">
                 <!-- Kanji sets are loaded in through the loadKanjiSet function -->
             </select>
+
+            <input type="button" id="randomkanji" title="Random kanji from set" value="🎲"></input>
         </div>
     </div>
 
@@ -55,9 +69,5 @@
             <!-- This list will be populated with examples from the API -->
         </ul>
     </div>
-
-    <!-- Scripts -->
-    <script src="js/popup.js"></script>
-    <script src="js/canvas.js"></script>
 </body>
 </html>

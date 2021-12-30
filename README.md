@@ -25,7 +25,7 @@ Google chrome will automatically update the extension as I publish new updates i
 If installing from this repository, `git clone` this repository and then run `git pull origin master` yourself.
 You'll need to go back into the [chrome extension settings](chrome://extensions) and press the refresh icon next to the extension to reload.
 
-I'm using a [custom GitHub action](.github\workflows\updatewebstore.yml) to automatically publish new versions of the extension to the chrome store every time I change the `version` parameter in the `manifest.json` file.
+I'm using a [custom GitHub action](.github/workflows/updatewebstore.yml) to automatically publish new versions of the extension to the chrome store every time I change the `version` parameter in the `manifest.json` file.
 
 ## :file_cabinet: API
 The kanji drawing guide videos are sourced from [KanjiAlive](https://app.kanjialive.com/api/docs), and cached using a [middleman I created](https://replit.com/@chocolatejade42/kanjithing-backend) (as RapidAPI limits requests). 
@@ -42,14 +42,16 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
 - [ ] Make the user guess readings of kanji in words
 - [ ] Scoreboard somehow
 - [ ] Update indicator
-- [x] Offline cache/compatability
-    * might not be possible with the small amount of storage space allowed to chrome extensions
-- [ ] Buttons to select the next/previous/random kanji in set
-- [x] Auto create and publish releases on GitHub when manifest version changes
-- [ ] Load custom kanji sets
-- [x] Clean up and potentially seperate the css into separate files
-- [x] Cache responses returned from the server in local storage
 - [ ] How-to-use page that opens on first install to display instructions
+- [ ] Help page
+    - How to use the extention, info about tooltips, etc
+- [ ] Settings page
+    - Load custom kanji sets
+    - Log in to save 
+- [x] Buttons to select a random kanji in set
+- [x] Clean up and potentially seperate the css into separate files
+- [x] Auto create and publish releases on GitHub when manifest version changes
+- [x] Cache responses returned from the server in local storage
 - [x] Fix dependency on RapidAPI
     - [kanjialive-backend on repl.it](https://replit.com/@chocolatejade42/kanjithing-backend)
 - [x] Select a kanji grade to learn or a wakatta unit
