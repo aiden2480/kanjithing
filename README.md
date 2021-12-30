@@ -28,14 +28,33 @@ You'll need to go back into the [chrome extension settings](chrome://extensions)
 I'm using a [custom GitHub action](.github/workflows/updatewebstore.yml) to automatically publish new versions of the extension to the chrome store every time I change the `version` parameter in the `manifest.json` file.
 
 ## :file_cabinet: API
-The kanji drawing guide videos are sourced from [KanjiAlive](https://app.kanjialive.com/api/docs), and cached using a [middleman I created](https://replit.com/@chocolatejade42/kanjithing-backend) (as RapidAPI limits requests). 
+The kanji drawing guide videos are sourced from [KanjiAlive](https://app.kanjialive.com/api/docs), and cached using a [middleman I created](https://replit.com/@chocolatejade42/kanjithing-backend) (as RapidAPI limits requests).
+It also collates some data about the kanji which is used in the extension, such as readings, and example words.
 Requests can be made at the `/kanji/:kanji` endpoint, like so.
 
 ```bash
 $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
 ```
 ```json
-{"status": 200,"video": "https://media.kanjialive.com/kanji_animations/kanji_mp4/kuruma_00.mp4"}
+{
+    "status": 200,
+    "kanji": "車",
+    "kstroke": 7,
+    "kmeaning": "vehicle, wheel, car",
+    "kgrade": 1,
+    "kunyomi_ja": "くるま",
+    "onyomi_ja": "シャ",
+    "video": "https://media.kanjialive.com/kanji_animations/kanji_mp4/kuruma_00.mp4",
+    "examples": [
+        ["車（くるま）", "car"],
+        ["電車（でんしゃ）", "train"],
+        ["自転車（じてんしゃ）", "bicycle"],
+        ["自動車（じどうしゃ）", "automobile"],
+        ["車いす（くるまいす）", "wheel chair"],
+        ["駐車する（ちゅうしゃする）", "park a car"],
+        ["停車する（ていしゃする）", "stop a car or train"]
+    ]
+}
 ```
 
 ## :memo: Future features
