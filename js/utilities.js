@@ -47,3 +47,26 @@ function convertCanvasToBlackAndWhite(canvas) {
     fabctx.putImageData(pixels, 0, 0, 0, 0, pixels.width, pixels.height);
     return fabcan.toDataURL("image/png")
 }
+
+export async function fetchKanjiDetails(kanji) {
+    // Make request for resource - either cache or online
+    var baseurl = "https://kanjithing-backend.chocolatejade42.repl.co";
+    var version = (await chrome.management.getSelf()).version;
+    var infosection = document.getElementById("infosection");
+    
+    try {
+        var resp = await fetch(`${baseurl}/kanji/${encodeURI(kanji)}?q=${version}`);
+        var json = await resp.json();
+        infosection.classList.remove("offline");
+    } catch (error) {
+        infosection.classList.add("offline");
+        return {};
+    }
+
+    if (json.status !== 200) {
+        console.error(json.error, resp);
+        return;
+    }
+
+    return json;
+}
