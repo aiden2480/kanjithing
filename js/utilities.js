@@ -48,6 +48,45 @@ function convertCanvasToBlackAndWhite(canvas) {
     return fabcan.toDataURL("image/png")
 }
 
+export async function checkRembrandt() {
+    var canv = document.createElement("canvas");
+    [canv.width, canv.height] = [248, 248];
+    
+    var rem = new Rembrandt({
+        imageA: await getLastFrameOfVideo((await fetchKanjiDetails(selectedkanji.value)).video),
+        imageB: convertCanvasToBlackAndWhite(canvas),
+        thresholdType: Rembrandt.THRESHOLD_PERCENT,
+        maxThreshold: 0.10,
+        maxDelta: 20,
+        maxOffset: 0,
+        renderComposition: true,
+        compositionMaskColor: new Rembrandt.Color(0.54, 0.57, 0.62)
+    });
+
+    var blank = new Rembrandt({
+        imageA: await getLastFrameOfVideo((await fetchKanjiDetails(selectedkanji.value)).video),
+        imageB: canv.toDataURL()
+    });
+
+    blank.compare().then(result => {
+        console.debug("Pixel Difference:", result.differences, "Percentage difference", result.percentageDifference * 100 + "%");
+
+        window.diff = result.percentageDifference;
+    }).catch((e) => {
+        console.error(e);
+    });
+
+    rem.compare().then(result => {
+        console.debug("Pixel Difference:", result.differences, "Percentage difference", result.percentageDifference * 100 + "%");
+        console.debug("Passed:", result.passed);
+        // document.body.appendChild(result.compositionImage);
+
+        console.debug(result.percentageDifference / window.diff * 100);        
+    }).catch((e) => {
+        console.error(e);
+    });
+}
+
 export async function fetchKanjiDetails(kanji) {
     // Make request for resource - either cache or online
     var baseurl = "https://kanjithing-backend.chocolatejade42.repl.co";
