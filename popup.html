@@ -8,6 +8,7 @@
     <!-- Scripts -->
     <script src="js/popup.js" defer></script>
     <script src="js/canvas.js" defer></script>
+    <noscript><h1>You need to enable JavaScript for this extension to work</h1></noscript>
 </head>
 <body>
     <div id="drawsection">
@@ -24,8 +25,8 @@
         
         <!-- Panel beneath canvas/video thing -->
         <div id="panel">
-            <input type="button" id="playpause" title="Play/pause the animation" value="&#9208;"></input>
-            <input type="button" id="eraseall" title="Erase your drawing" value="&#128465;&#65039;"></input>
+            <input type="button" id="playpause" title="Play/pause the animation" value="&#9208;" />
+            <input type="button" id="eraseall" title="Erase your drawing" value="&#128465;&#65039;" />
             
             <select id="selectedunit" title="Select a Wakatta unit to learn kanji from">
                 <!-- Wakatta units containing their own kanji sets -->
@@ -47,7 +48,7 @@
                 <!-- Kanji sets are loaded in through the loadKanjiSet function -->
             </select>
 
-            <input type="button" id="randomkanji" title="Random kanji from set" value="🎲"></input>
+            <input type="button" id="randomkanji" title="Random kanji from set" value="&#127922;" />
         </div>
     </div>
 

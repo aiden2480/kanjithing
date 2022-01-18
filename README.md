@@ -60,8 +60,9 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
 ## :memo: Future features
 - [ ] Make the user guess readings of kanji in words
 - [ ] Scoreboard somehow
-- [ ] Update indicator
 - [ ] How-to-use page that opens on first install to display instructions
+- [ ] Add overflow protection to readings just like examples
+- [ ] Add a check for `loadKanjiDetails` in case the user has loaded a new kanji by the time info loads
 - [ ] Help page
     - How to use the extention, info about tooltips, etc
 - [ ] Settings page
