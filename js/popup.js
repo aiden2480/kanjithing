@@ -1,10 +1,12 @@
+import { checkRembrandt, fetchKanjiDetails } from "/js/utilities.js"
+
 /* Define elements */
 var canvas = document.getElementById("drawcanvas");
 var video = document.getElementById("kanjiguide");
 var playpause = document.getElementById("playpause");
 var eraseall = document.getElementById("eraseall");
 var selectedkanji = document.getElementById("selectedkanji");
-var randomkanji = document.getElementById("randomkanji");
+var remcheck = document.getElementById("remcheck");
 var ctx = canvas.getContext("2d");
 
 /* TODO: Find a better home for this variable */
@@ -129,37 +131,19 @@ eraseall.addEventListener("click", () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 });
 
+remcheck.addEventListener("click", () => {
+    checkRembrandt();
+});
+
+/* Removed the random kanji button in favour of Rembrandt checking
 randomkanji.addEventListener("click", () => {
     // Load a random kanji from the selected set
     var set = wakattaunits[selectedunit.value].replace(selectedkanji.value, "");
     var index = Math.floor(Math.random() * set.length);
     loadKanji(set[index]);
-})
+}); */
 
 /* API call functions */
-async function fetchKanjiDetails(kanji) {
-    // Make request for resource - either cache or online
-    var baseurl = "https://kanjithing-backend.chocolatejade42.repl.co";
-    var version = (await chrome.management.getSelf()).version;
-    var infosection = document.getElementById("infosection");
-    
-    try {
-        var resp = await fetch(`${baseurl}/kanji/${encodeURI(kanji)}?q=${version}`);
-        var json = await resp.json();
-        infosection.classList.remove("offline");
-    } catch (error) {
-        infosection.classList.add("offline");
-        return {};
-    }
-
-    if (json.status !== 200) {
-        console.error(json.error, resp);
-        return;
-    }
-
-    return json;
-}
-
 async function populateInformation(kanji) {
     var json = await fetchKanjiDetails(kanji)
     var listelem = document.getElementById("exampleslist");

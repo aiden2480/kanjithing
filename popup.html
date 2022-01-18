@@ -6,7 +6,9 @@
     <link rel="stylesheet" href="css/popup.css">
 
     <!-- Scripts -->
-    <script src="js/popup.js" defer></script>
+    <script src="js/libs/rembrandt.js"></script>
+    <script src="js/utilities.js" type="module"></script>
+    <script src="js/popup.js" type="module" defer></script>
     <script src="js/canvas.js" defer></script>
     <noscript><h1>You need to enable JavaScript for this extension to work</h1></noscript>
 </head>
@@ -48,7 +50,8 @@
                 <!-- Kanji sets are loaded in through the loadKanjiSet function -->
             </select>
 
-            <input type="button" id="randomkanji" title="Random kanji from set" value="&#127922;" />
+            <input type="button" id="remcheck" title="Evaluate & score your drawing" value="&#10004;" />
+            <!-- <input type="button" id="randomkanji" title="Random kanji from set" value="&#127922;" /> -->
         </div>
     </div>
 
