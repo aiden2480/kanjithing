@@ -1,3 +1,28 @@
+function getLastFrameOfVideo(url) {
+    // Take in a video URL and get the last frame from that video.
+    // Used to compare video to canvas drawing via Rembrandt.
+
+    return new Promise((resolve, reject) => {
+        var vid = document.createElement("video");
+        var canvas = document.createElement("canvas");
+        var ctx = canvas.getContext("2d");
+    
+        vid.addEventListener("canplaythrough", () => {
+            vid.addEventListener("canplay", () => {
+                ctx.drawImage(vid, 0, 0);
+            
+                resolve(canvas.toDataURL());
+            });
+
+            vid.currentTime = vid.duration;
+        }, {once: true});
+    
+        [canvas.width, canvas.height] = [248, 248];
+        vid.crossOrigin = "anonymous";
+        vid.src = url;    
+    });
+}
+
 function convertCanvasToBlackAndWhite(canvas) {
     // Convert the canvas to black and white for better comparison
     
