@@ -11,14 +11,9 @@ function convertCanvasToBlackAndWhite(canvas) {
             var avg = (pixels.data[i] + pixels.data[i + 1] + pixels.data[i + 2]) / 3;
 
             if (pixels.data[i + 3] > 0 && avg < 255) {
-                pixels.data[i] = 0
-                pixels.data[i + 1] = 0
-                pixels.data[i + 2] = 0
+                for (let a=0; a < 3; a++) {pixels.data[i + a] = 0}
             } else {
-                pixels.data[i] = 255
-                pixels.data[i + 1] = 255
-                pixels.data[i + 2] = 255
-                pixels.data[i + 3] = 255
+                for (let a=0; a < 4; a++) {pixels.data[i + a] = 255}
             }
         }
     }
