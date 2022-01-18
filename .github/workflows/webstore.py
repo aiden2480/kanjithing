@@ -159,7 +159,7 @@ if __name__ == "__main__":
     # Check if the manifest versions are the same
     old, new = compare_manifest_versions()
 
-    print("Manifest versions")
+    print("\nManifest versions")
     print(f" * {old} -> {new}\n")
 
     # Parse arguments
@@ -167,8 +167,6 @@ if __name__ == "__main__":
     parser.add_argument("--event", type=str, default=None)
     parser.add_argument("--force", action="store_true", default=False)
     args = parser.parse_args()
-
-    print(args)
     
     if args.force:
         print("Forcing update via --force flag")
