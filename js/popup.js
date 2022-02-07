@@ -152,8 +152,16 @@ document.addEventListener("keydown", (event) => {
         case "ArrowDown":
             break;
         case "ArrowLeft":
+            var thispos = wakattaunits[selectedunit.value].indexOf(selectedkanji.value);
+            var nextpos = thispos > 0 ? thispos - 1 : wakattaunits[selectedunit.value].length - 1;
+            
+            loadKanji(wakattaunits[selectedunit.value][nextpos]);
             break;
         case "ArrowRight":
+            var thispos = wakattaunits[selectedunit.value].indexOf(selectedkanji.value);
+            var nextpos = thispos >= wakattaunits[selectedunit.value].length - 1 ? 0 : thispos + 1;
+            
+            loadKanji(wakattaunits[selectedunit.value][nextpos]);
             break;
         case "Backspace":
         case "Delete":

@@ -71,7 +71,9 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
     - [Available on GitHub](https://github.com/kanjialive/kanji-data-media/blob/master/kanji-animations/stroke_timings) with timestamps
 - [ ] Settings page
     - Load custom kanji sets
-    - Log in to save 
+    - Log in to save
+- [ ] Grey loading screen should only appear after a certain amount of time to account for cached requests that resolve quickly
+    - To prevent grey/white flashes that occur when the next character loads quickly
 - [x] Buttons to select a random kanji in set
 - [x] Clean up and potentially seperate the css into separate files
 - [x] Auto create and publish releases on GitHub when manifest version changes
