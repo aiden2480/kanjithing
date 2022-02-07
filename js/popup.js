@@ -137,6 +137,9 @@ randomkanji.addEventListener("click", () => {
 })
 
 document.addEventListener("keydown", (event) => {
+    // if (event.isComposing) return; // TODO ignore extra keystrokes sent from same keypress
+    if (event.ctrlKey || event.shiftKey) return;
+
     if (event.code === "KeyR") {
         var set = wakattaunits[selectedunit.value].replace(selectedkanji.value, "");
         var index = Math.floor(Math.random() * set.length);
