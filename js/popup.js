@@ -140,11 +140,25 @@ document.addEventListener("keydown", (event) => {
     // if (event.isComposing) return; // TODO ignore extra keystrokes sent from same keypress
     if (event.ctrlKey || event.shiftKey) return;
 
-    if (event.code === "KeyR") {
-        var set = wakattaunits[selectedunit.value].replace(selectedkanji.value, "");
-        var index = Math.floor(Math.random() * set.length);
-        
-        loadKanji(set[index]);
+    switch (event.code) {
+        case "KeyR":
+            var set = wakattaunits[selectedunit.value].replace(selectedkanji.value, "");
+            var index = Math.floor(Math.random() * set.length);
+            
+            loadKanji(set[index]);
+            break;
+        case "ArrowUp":
+            break;
+        case "ArrowDown":
+            break;
+        case "ArrowLeft":
+            break;
+        case "ArrowRight":
+            break;
+        case "Backspace":
+        case "Delete":
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            break;
     }
 });
 
