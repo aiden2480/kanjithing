@@ -136,6 +136,15 @@ randomkanji.addEventListener("click", () => {
     loadKanji(set[index]);
 })
 
+document.addEventListener("keydown", (event) => {
+    if (event.code === "KeyR") {
+        var set = wakattaunits[selectedunit.value].replace(selectedkanji.value, "");
+        var index = Math.floor(Math.random() * set.length);
+        
+        loadKanji(set[index]);
+    }
+});
+
 /* API call functions */
 async function fetchKanjiDetails(kanji) {
     // Make request for resource - either cache or online
