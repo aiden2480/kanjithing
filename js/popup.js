@@ -148,8 +148,18 @@ document.addEventListener("keydown", (event) => {
             loadKanji(set[index]);
             break;
         case "ArrowUp":
+            var thispos = parseInt(selectedunit.value);
+            var nextpos = thispos - 1 < 0 ? wakattaunits.length - 1 : thispos - 1;
+
+            selectedunit.value = nextpos;
+            loadKanjiSet(nextpos);
             break;
         case "ArrowDown":
+            var thispos = parseInt(selectedunit.value);
+            var nextpos = thispos + 1 >= wakattaunits.length ? 0 : thispos + 1;
+
+            selectedunit.value = nextpos;
+            loadKanjiSet(nextpos);
             break;
         case "ArrowLeft":
             var thispos = wakattaunits[selectedunit.value].indexOf(selectedkanji.value);

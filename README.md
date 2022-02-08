@@ -59,11 +59,9 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
 
 ## :memo: Future features
 - [ ] Make the user guess readings of kanji in words
-- [ ] Scoreboard somehow
 - [ ] Add overflow protection to readings just like examples
 - [ ] Add a check for `loadKanjiDetails` in case the user has loaded a new kanji by the time info loads
 - [ ] Index page with version links and details
-- [ ] Automatically publish releases onto GitHub when the `version` parameter changes in `manifest.json`
 - [ ] Help page
     - How to use the extention, info about tooltips, etc
 - [ ] Flashcard thing where you get the meaning of the kanji and sample words and have to draw it
@@ -72,13 +70,6 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
 - [ ] Settings page
     - Load custom kanji sets
     - Log in to save
+    - Change the speed with which the drawing guide video is played
 - [ ] Grey loading screen should only appear after a certain amount of time to account for cached requests that resolve quickly
     - To prevent grey/white flashes that occur when the next character loads quickly
-- [x] Buttons to select a random kanji in set
-- [x] Clean up and potentially seperate the css into separate files
-- [x] Auto create and publish releases on GitHub when manifest version changes
-- [x] Cache responses returned from the server in local storage
-- [x] Fix dependency on RapidAPI
-    - [kanjialive-backend on repl.it](https://replit.com/@chocolatejade42/kanjithing-backend)
-- [x] Select a kanji grade to learn or a wakatta unit
-    - Added wakatta unit selection in version [`d35a6bc`](https://github.com/aiden2480/kanjithing/commit/d35a6bc)
