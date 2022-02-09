@@ -6,6 +6,7 @@ var eraseall = document.getElementById("eraseall");
 var selectedkanji = document.getElementById("selectedkanji");
 var randomkanji = document.getElementById("randomkanji");
 var ctx = canvas.getContext("2d");
+var currentlyPressedKeys = {};
 
 /* TODO: Find a better home for this variable */
 var wakattaunits = [
@@ -137,10 +138,17 @@ randomkanji.addEventListener("click", () => {
 })
 
 document.addEventListener("keydown", (event) => {
-    // TODO ignore extra keystrokes sent from same keypress
+    // Disable custom key events when special keys held
     if (event.ctrlKey || event.shiftKey) return;
+
+    // Suppress Chrome default behaviour (Issue #16)
     if (event.code.startsWith("Arrow")) event.preventDefault();
 
+    // Ignore duplicate presses less than 200ms apart (Issue #15)
+    if (new Date().getTime() - currentlyPressedKeys[event.code] < 200) return;
+    currentlyPressedKeys[event.code] = new Date().getTime();
+
+    // Hotkey callbacks for each key
     switch (event.code) {
         case "KeyR":
             var set = wakattaunits[selectedunit.value].replace(selectedkanji.value, "");
@@ -181,6 +189,10 @@ document.addEventListener("keydown", (event) => {
     }
 });
 
+document.addEventListener("keyup", (event) => {
+    delete currentlyPressedKeys[event.code];
+});
+
 /* API call functions */
 async function fetchKanjiDetails(kanji) {
     // Make request for resource - either cache or online
@@ -199,7 +211,8 @@ async function fetchKanjiDetails(kanji) {
 
     if (json.status !== 200) {
         console.error(json.error, resp);
-        return;
+        infosection.classList.add("offline");
+        return {};
     }
 
     return json;
