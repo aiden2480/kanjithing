@@ -137,8 +137,9 @@ randomkanji.addEventListener("click", () => {
 })
 
 document.addEventListener("keydown", (event) => {
-    // if (event.isComposing) return; // TODO ignore extra keystrokes sent from same keypress
+    // TODO ignore extra keystrokes sent from same keypress
     if (event.ctrlKey || event.shiftKey) return;
+    if (event.code.startsWith("Arrow")) event.preventDefault();
 
     switch (event.code) {
         case "KeyR":
