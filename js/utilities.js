@@ -50,9 +50,15 @@ function convertCanvasToBlackAndWhite(canvas) {
 
 export async function checkRembrandt() {
     var videoBase64 = await getLastFrameOfVideo((await fetchKanjiDetails(selectedkanji.value)).video);
-    var canv = document.createElement("canvas");
-    [canv.width, canv.height] = [248, 248];
+    var blankcanv = document.createElement("canvas");
+    var blankctx = blankcanv.getContext("2d");
     
+    // Draw 248x248 white on a canvas
+    [blankcanv.width, blankcanv.height] = [248, 248];
+    blankctx.fillStyle = "white";
+    blankctx.fillRect(0, 0, 248, 248);
+    
+    // Compare drawing with video, and blank with video
     var checkrem = new Rembrandt({
         imageA: videoBase64,
         imageB: convertCanvasToBlackAndWhite(canvas),
@@ -60,24 +66,20 @@ export async function checkRembrandt() {
         maxThreshold: 0.08,
         maxDelta: 20,
         maxOffset: 0,
-        renderComposition: true,
-        compositionMaskColor: new Rembrandt.Color(0.54, 0.57, 0.62)
+        // renderComposition: true,
+        // compositionMaskColor: new Rembrandt.Color(0.54, 0.57, 0.62)
     });
 
     var blankrem = new Rembrandt({
         imageA: videoBase64,
-        imageB: canv.toDataURL()
+        imageB: blankcanv.toDataURL(),
     });
 
     var blank = await blankrem.compare();
     var check = await checkrem.compare();
 
-    // TODO refine these values & remove debug statements
-    console.debug(check.percentageDifference / blank.percentageDifference * 100);
-    console.debug(check.percentageDifference * 100);
-    console.debug("Passed:", check.passed);
-
-    return check.percentageDifference / blank.percentageDifference * 100;
+    // Find the drawing score relative to the complexity of the kanji
+    return (1 - check.percentageDifference / blank.percentageDifference) * 100;
 }
 
 export async function fetchKanjiDetails(kanji) {
