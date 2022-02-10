@@ -49,42 +49,35 @@ function convertCanvasToBlackAndWhite(canvas) {
 }
 
 export async function checkRembrandt() {
+    var videoBase64 = await getLastFrameOfVideo((await fetchKanjiDetails(selectedkanji.value)).video);
     var canv = document.createElement("canvas");
     [canv.width, canv.height] = [248, 248];
     
-    var rem = new Rembrandt({
-        imageA: await getLastFrameOfVideo((await fetchKanjiDetails(selectedkanji.value)).video),
+    var checkrem = new Rembrandt({
+        imageA: videoBase64,
         imageB: convertCanvasToBlackAndWhite(canvas),
         thresholdType: Rembrandt.THRESHOLD_PERCENT,
-        maxThreshold: 0.10,
+        maxThreshold: 0.08,
         maxDelta: 20,
         maxOffset: 0,
         renderComposition: true,
         compositionMaskColor: new Rembrandt.Color(0.54, 0.57, 0.62)
     });
 
-    var blank = new Rembrandt({
-        imageA: await getLastFrameOfVideo((await fetchKanjiDetails(selectedkanji.value)).video),
+    var blankrem = new Rembrandt({
+        imageA: videoBase64,
         imageB: canv.toDataURL()
     });
 
-    blank.compare().then(result => {
-        console.debug("Pixel Difference:", result.differences, "Percentage difference", result.percentageDifference * 100 + "%");
+    var blank = await blankrem.compare();
+    var check = await checkrem.compare();
 
-        window.diff = result.percentageDifference;
-    }).catch((e) => {
-        console.error(e);
-    });
+    // TODO refine these values & remove debug statements
+    console.debug(check.percentageDifference / blank.percentageDifference * 100);
+    console.debug(check.percentageDifference * 100);
+    console.debug("Passed:", check.passed);
 
-    rem.compare().then(result => {
-        console.debug("Pixel Difference:", result.differences, "Percentage difference", result.percentageDifference * 100 + "%");
-        console.debug("Passed:", result.passed);
-        // document.body.appendChild(result.compositionImage);
-
-        console.debug(result.percentageDifference / window.diff * 100);        
-    }).catch((e) => {
-        console.error(e);
-    });
+    return check.percentageDifference / blank.percentageDifference * 100;
 }
 
 export async function fetchKanjiDetails(kanji) {
