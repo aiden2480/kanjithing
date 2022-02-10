@@ -197,7 +197,7 @@ document.addEventListener("keyup", (event) => {
 async function fetchKanjiDetails(kanji) {
     // Make request for resource - either cache or online
     var baseurl = "https://kanjithing-backend.chocolatejade42.repl.co";
-    var version = (await chrome.management.getSelf()).version;
+    var version = (await chrome.management.getSelf()).version.split(".").slice(0, 2).join(".");
     var infosection = document.getElementById("infosection");
     
     try {
