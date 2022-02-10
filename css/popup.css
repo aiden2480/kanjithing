@@ -67,6 +67,15 @@ div#panel * {
 /* Info section - Kanji-specific details */
 div#infosection > *:not(h1) { font-size: 20px; }
 div#infosection * { margin: 0px; }
+div#infosection #onkunyomi {
+    max-width: 300px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    word-wrap: break-word;
+    vertical-align: top;
+    display: inline-block;
+}
 
 /* Info section - examples */
 div#infosection #exampleslist { padding-left: 5px; }

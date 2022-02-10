@@ -59,12 +59,13 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
 
 ## :memo: Future features
 - [ ] Make the user guess readings of kanji in words
-- [ ] Add overflow protection to readings just like examples
 - [ ] Add a check for `loadKanjiDetails` in case the user has loaded a new kanji by the time info loads
 - [ ] Index page with version links and details
 - [ ] Help page
     - How to use the extention, info about tooltips, etc
 - [ ] Flashcard thing where you get the meaning of the kanji and sample words and have to draw it
+- [ ] Show an extra sample word when the readings string doesn't cross over to the next line
+    - Compress space between two lines if it crosses over
 - [ ] Grade stroke order of drawing
     - [Available on GitHub](https://github.com/kanjialive/kanji-data-media/blob/master/kanji-animations/stroke_timings) with timestamps
 - [ ] Settings page
