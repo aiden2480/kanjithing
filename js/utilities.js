@@ -79,7 +79,7 @@ export async function checkRembrandt() {
     var check = await checkrem.compare();
 
     // Find the drawing score relative to the complexity of the kanji
-    return (1 - check.percentageDifference / blank.percentageDifference) * 100;
+    return Math.max(1 - check.percentageDifference / blank.percentageDifference, 0) * 100;
 }
 
 export async function fetchKanjiDetails(kanji) {
