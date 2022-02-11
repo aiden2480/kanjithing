@@ -158,8 +158,16 @@ remcheck.addEventListener("click", async () => {
     style.opacity = 1;
     style.display = "inherit";
     
+    // Fade up and out after two seconds
     setTimeout(() => {
-        style.display = "none";
+        (function fadeUp() {
+            var doAgain = false;
+            
+            (style.opacity > 0.01 && (style.opacity *= 0.8)) ? doAgain = true : null;
+            (parseFloat(style.marginTop) > 1 && (style.marginTop = parseFloat(style.marginTop) * 0.8 + "px")) ? doAgain = true : null;
+            
+            doAgain ? setTimeout(fadeUp, 40) : style.display = "none";
+        })();
     }, 2000);
 });
 
