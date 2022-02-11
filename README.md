@@ -67,7 +67,21 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
     - How to use the extention, info about tooltips, etc
 - [ ] Settings page
     - Load custom kanji sets
-    - Log in to save 
+    - Log in to save
+- [ ] Fix whatever weirdness broke the dynamic browser icon
+- [ ] Custom flashcards to remember kanji/words
+    - Import from quizlet
+- [ ] Able to star/favourite kanji to add them quickly to a custom set.
+- [ ] Right click to remove drawing (all connected strokes)
+- [ ] Keybinds to navigate the application via keyboard
+    - Up/down arrow to navigate between kanji sets
+    - Left/right arrow to navigate between kanji in the currently selected set
+    - R to select a random kanji in the currently selected set
+    - Enter to grade kanji drawing
+    - Space to play/pause/replay video guide
+    - Backspace to clear drawing
+    - S to star/unstar selected kanji
+    - Keybinds visible in tooltips
 - [x] Buttons to select a random kanji in set
 - [x] Clean up and potentially seperate the css into separate files
 - [x] Auto create and publish releases on GitHub when manifest version changes

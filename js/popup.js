@@ -131,8 +131,36 @@ eraseall.addEventListener("click", () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 });
 
-remcheck.addEventListener("click", () => {
-    checkRembrandt();
+remcheck.addEventListener("click", async () => {
+    var percent = await checkRembrandt();
+    var style = document.getElementById("popup-outer").style;
+    var inner = document.getElementById("popup-inner");
+    var result = "Try again";
+
+    switch (true) {
+        case (percent > 90):
+            result = "Outstanding!";
+            break;
+        case (percent > 80):
+            result = "Excellent!";
+            break;
+        case (percent > 70):
+            result = "Great!";
+            break;
+        case (percent > 60):
+            result = "Good!";
+            break;
+    }
+
+    // Set style properties
+    inner.children[0].innerText = `You scored ${percent.toFixed(2)}%. ${result}`;
+    style.marginTop = "15px";
+    style.opacity = 1;
+    style.display = "inherit";
+    
+    setTimeout(() => {
+        style.display = "none";
+    }, 2000);
 });
 
 /* Removed the random kanji button in favour of Rembrandt checking
