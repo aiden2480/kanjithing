@@ -60,17 +60,35 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
 ## :memo: Future features
 - [ ] Make the user guess readings of kanji in words
 - [ ] Add a check for `loadKanjiDetails` in case the user has loaded a new kanji by the time info loads
-- [ ] Index page with version links and details
+- [ ] Index page
+    - Version links and details
 - [ ] Help page
     - How to use the extention, info about tooltips, etc
-- [ ] Flashcard thing where you get the meaning of the kanji and sample words and have to draw it
-- [ ] Show an extra sample word when the readings string doesn't cross over to the next line
-    - Compress space between two lines if it crosses over
-- [ ] Grade stroke order of drawing
-    - [Available on GitHub](https://github.com/kanjialive/kanji-data-media/blob/master/kanji-animations/stroke_timings) with timestamps
+    - Open on the first install
 - [ ] Settings page
     - Load custom kanji sets
     - Log in to save
     - Change the speed with which the drawing guide video is played
+- [ ] Flashcard thing where you get the meaning of the kanji and sample words and have to draw it
+- [ ] Custom flashcards to remember kanji/words
+    - Import from quizlet
+- [ ] Show an extra sample word when the readings string doesn't cross over to the next line
+    - Compress space between two lines if it crosses over
+- [ ] Grade stroke order of drawing
+    - [Available on GitHub](https://github.com/kanjialive/kanji-data-media/blob/master/kanji-animations/stroke_timings) with timestamps
 - [ ] Grey loading screen should only appear after a certain amount of time to account for cached requests that resolve quickly
     - To prevent grey/white flashes that occur when the next character loads quickly
+- [ ] Fix whatever weirdness broke the dynamic browser icon
+- [ ] Able to star/favourite kanji to add them quickly to a custom set.
+- [ ] Right click to remove drawing (all connected strokes)
+- [x] Keybinds to navigate the application via keyboard
+    - Up/down arrow to navigate between kanji sets
+    - Left/right arrow to navigate between kanji in the currently selected set
+    - R to select a random kanji in the currently selected set
+    - Enter to grade kanji drawing
+    - Space to play/pause/replay video guide
+    - Backspace to clear drawing
+    - S to star/unstar selected kanji
+    - Keybinds visible in tooltips
+- [ ] Make the height of the buttons and dropdown selectors consistent
+- [ ] Use static assets for the emojis to keep design consistent between operating systems

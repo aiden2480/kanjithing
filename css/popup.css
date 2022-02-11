@@ -31,7 +31,6 @@ div#drawcontainer { height: 248px; }
 video#kanjiguide { position: absolute; }
 canvas#drawcanvas {
     position: absolute;
-    z-index: 10;
 }
 
 /* Draw section - buttons panel */
@@ -92,3 +91,28 @@ div#infosection #exampleslist * {
 #articlecontainer { position: relative; }
 #articlecontainer > .article { display: inline-block; }
 #articlecontainer > .article > * { font-weight: bold; font-size: 90%; }
+
+/* Tracing grading system */
+#popup-outer {
+    width: 95%;
+    z-index: 10;
+    position: absolute;
+    display: inline-block;
+    justify-content: center;
+    margin: auto;
+}
+
+#popup-inner {
+    border-radius: 3px;
+    background-color: #2ECC71;
+    color: #1F8B4C;
+    margin: 0 auto;
+    display: table;
+    border: 3px solid #1F8B4C;
+    user-select: none;
+    font-size: 185%;
+}
+
+#popup-inner span {
+    margin: 15px;
+}
