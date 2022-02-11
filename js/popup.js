@@ -8,6 +8,7 @@ var eraseall = document.getElementById("eraseall");
 var selectedkanji = document.getElementById("selectedkanji");
 var remcheck = document.getElementById("remcheck");
 var ctx = canvas.getContext("2d");
+var lastPopupTimestamp = 0;
 
 /* TODO: Find a better home for this variable */
 var wakattaunits = [
@@ -157,11 +158,13 @@ remcheck.addEventListener("click", async () => {
     style.marginTop = "15px";
     style.opacity = 1;
     style.display = "inherit";
+    lastPopupTimestamp = new Date();
     
     // Fade up and out after two seconds
     setTimeout(() => {
         (function fadeUp() {
             var doAgain = false;
+            if (new Date() - lastPopupTimestamp < 2000) return;
             
             (style.opacity > 0.01 && (style.opacity *= 0.8)) ? doAgain = true : null;
             (parseFloat(style.marginTop) > 1 && (style.marginTop = parseFloat(style.marginTop) * 0.8 + "px")) ? doAgain = true : null;
@@ -170,14 +173,6 @@ remcheck.addEventListener("click", async () => {
         })();
     }, 2000);
 });
-
-/* Removed the random kanji button in favour of Rembrandt checking
-randomkanji.addEventListener("click", () => {
-    // Load a random kanji from the selected set
-    var set = wakattaunits[selectedunit.value].replace(selectedkanji.value, "");
-    var index = Math.floor(Math.random() * set.length);
-    loadKanji(set[index]);
-}); */
 
 /* API call functions */
 async function populateInformation(kanji) {
