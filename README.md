@@ -90,5 +90,4 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
     - Backspace to clear drawing
     - S to star/unstar selected kanji
     - Keybinds visible in tooltips
-- [ ] Make the height of the buttons and dropdown selectors consistent
 - [ ] Use static assets for the emojis to keep design consistent between operating systems

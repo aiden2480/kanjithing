@@ -41,8 +41,9 @@ div#panel {
 }
 
 div#panel * {
+    height: 23px;
     border-radius: 3px;
-    margin: 5px 0px 0px 3px;
+    margin: 4px 2px 0px 2px;
     display: inline-block;
     background-color: #36393e;
     color: #7289da;
