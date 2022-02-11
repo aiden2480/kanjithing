@@ -8,7 +8,10 @@ var eraseall = document.getElementById("eraseall");
 var selectedkanji = document.getElementById("selectedkanji");
 var remcheck = document.getElementById("remcheck");
 var ctx = canvas.getContext("2d");
+
+/* Volitile variables */
 var lastPopupTimestamp = 0;
+var currentlyPressedKeys = {};
 
 /* TODO: Find a better home for this variable */
 var wakattaunits = [
@@ -172,6 +175,62 @@ remcheck.addEventListener("click", async () => {
             doAgain ? setTimeout(fadeUp, 40) : style.display = "none";
         })();
     }, 2000);
+});
+
+document.addEventListener("keydown", (event) => {
+    // Disable custom key events when special keys held
+    if (event.ctrlKey || event.shiftKey) return;
+
+    // Suppress Chrome default behaviour (Issue #16)
+    if (event.code.startsWith("Arrow")) event.preventDefault();
+
+    // Ignore duplicate presses less than 200ms apart (Issue #15)
+    if (new Date().getTime() - currentlyPressedKeys[event.code] < 200) return;
+    currentlyPressedKeys[event.code] = new Date().getTime();
+
+    // Hotkey callbacks for each key
+    switch (event.code) {
+        case "KeyR":
+            var set = wakattaunits[selectedunit.value].replace(selectedkanji.value, "");
+            var index = Math.floor(Math.random() * set.length);
+            
+            loadKanji(set[index]);
+            break;
+        case "ArrowUp":
+            var thispos = parseInt(selectedunit.value);
+            var nextpos = thispos - 1 < 0 ? wakattaunits.length - 1 : thispos - 1;
+
+            selectedunit.value = nextpos;
+            loadKanjiSet(nextpos);
+            break;
+        case "ArrowDown":
+            var thispos = parseInt(selectedunit.value);
+            var nextpos = thispos + 1 >= wakattaunits.length ? 0 : thispos + 1;
+
+            selectedunit.value = nextpos;
+            loadKanjiSet(nextpos);
+            break;
+        case "ArrowLeft":
+            var thispos = wakattaunits[selectedunit.value].indexOf(selectedkanji.value);
+            var nextpos = thispos > 0 ? thispos - 1 : wakattaunits[selectedunit.value].length - 1;
+            
+            loadKanji(wakattaunits[selectedunit.value][nextpos]);
+            break;
+        case "ArrowRight":
+            var thispos = wakattaunits[selectedunit.value].indexOf(selectedkanji.value);
+            var nextpos = thispos >= wakattaunits[selectedunit.value].length - 1 ? 0 : thispos + 1;
+            
+            loadKanji(wakattaunits[selectedunit.value][nextpos]);
+            break;
+        case "Backspace":
+        case "Delete":
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            break;
+    }
+});
+
+document.addEventListener("keyup", (event) => {
+    delete currentlyPressedKeys[event.code];
 });
 
 /* API call functions */

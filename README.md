@@ -59,21 +59,29 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
 
 ## :memo: Future features
 - [ ] Make the user guess readings of kanji in words
-- [ ] Scoreboard somehow
-- [ ] How-to-use page that opens on first install to display instructions
-- [ ] Add overflow protection to readings just like examples
 - [ ] Add a check for `loadKanjiDetails` in case the user has loaded a new kanji by the time info loads
+- [ ] Index page
+    - Version links and details
 - [ ] Help page
     - How to use the extention, info about tooltips, etc
+    - Open on the first install
 - [ ] Settings page
     - Load custom kanji sets
     - Log in to save
-- [ ] Fix whatever weirdness broke the dynamic browser icon
+    - Change the speed with which the drawing guide video is played
+- [ ] Flashcard thing where you get the meaning of the kanji and sample words and have to draw it
 - [ ] Custom flashcards to remember kanji/words
     - Import from quizlet
+- [ ] Show an extra sample word when the readings string doesn't cross over to the next line
+    - Compress space between two lines if it crosses over
+- [ ] Grade stroke order of drawing
+    - [Available on GitHub](https://github.com/kanjialive/kanji-data-media/blob/master/kanji-animations/stroke_timings) with timestamps
+- [ ] Grey loading screen should only appear after a certain amount of time to account for cached requests that resolve quickly
+    - To prevent grey/white flashes that occur when the next character loads quickly
+- [ ] Fix whatever weirdness broke the dynamic browser icon
 - [ ] Able to star/favourite kanji to add them quickly to a custom set.
 - [ ] Right click to remove drawing (all connected strokes)
-- [ ] Keybinds to navigate the application via keyboard
+- [x] Keybinds to navigate the application via keyboard
     - Up/down arrow to navigate between kanji sets
     - Left/right arrow to navigate between kanji in the currently selected set
     - R to select a random kanji in the currently selected set
@@ -84,11 +92,3 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
     - Keybinds visible in tooltips
 - [ ] Make the height of the buttons and dropdown selectors consistent
 - [ ] Use static assets for the emojis to keep design consistent between operating systems
-- [x] Buttons to select a random kanji in set
-- [x] Clean up and potentially seperate the css into separate files
-- [x] Auto create and publish releases on GitHub when manifest version changes
-- [x] Cache responses returned from the server in local storage
-- [x] Fix dependency on RapidAPI
-    - [kanjialive-backend on repl.it](https://replit.com/@chocolatejade42/kanjithing-backend)
-- [x] Select a kanji grade to learn or a wakatta unit
-    - Added wakatta unit selection in version [`d35a6bc`](https://github.com/aiden2480/kanjithing/commit/d35a6bc)
