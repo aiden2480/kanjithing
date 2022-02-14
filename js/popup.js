@@ -235,7 +235,9 @@ document.addEventListener("keyup", (event) => {
 
 /* API call functions */
 async function populateInformation(kanji) {
-    var json = await fetchKanjiDetails(kanji)
+    var json = await fetchKanjiDetails(kanji);
+    if (selectedkanji.value != kanji) return;
+
     var listelem = document.getElementById("exampleslist");
     console.debug("populating kanji", kanji, JSON.parse(JSON.stringify(json)));
 
