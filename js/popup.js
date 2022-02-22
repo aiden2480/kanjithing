@@ -233,6 +233,10 @@ document.addEventListener("keyup", (event) => {
     delete currentlyPressedKeys[event.code];
 });
 
+canvas.addEventListener("contextmenu", (event) => {
+    event.preventDefault();
+});
+
 /* API call functions */
 async function populateInformation(kanji) {
     var json = await fetchKanjiDetails(kanji);

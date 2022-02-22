@@ -43,6 +43,7 @@ function sketch(event) {
     ctx.lineWidth = 10;
     ctx.lineCap = "round";
     ctx.strokeStyle = "#7289da";
+    ctx.globalCompositeOperation = (event.ctrlKey ? "destination-out" : "source-over");
     ctx.moveTo(coords.x, coords.y);
 
     updatePosition(event);
