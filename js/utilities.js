@@ -3,23 +3,35 @@ function getLastFrameOfVideo(url) {
     // Used to compare video to canvas drawing via Rembrandt.
 
     return new Promise((resolve, reject) => {
-        var vid = document.createElement("video");
-        var canvas = document.createElement("canvas");
-        var ctx = canvas.getContext("2d");
-    
-        vid.addEventListener("canplaythrough", () => {
-            vid.addEventListener("canplay", () => {
-                ctx.drawImage(vid, 0, 0);
-            
-                resolve(canvas.toDataURL());
-            });
+        var video = document.createElement("video");
+        var fabcan = document.createElement("canvas");
+        var fabctx = fabcan.getContext("2d");
 
-            vid.currentTime = vid.duration;
-        }, {once: true});
-    
-        [canvas.width, canvas.height] = [248, 248];
-        vid.crossOrigin = "anonymous";
-        vid.src = url;    
+        video.preload = "auto";
+        video.crossOrigin = "anonymous";
+
+        video.addEventListener("loadedmetadata", () => {
+            fabcan.width = video.videoWidth;
+            fabcan.height = video.videoHeight;
+
+            var callback = function () {
+                if (video.currentTime != video.duration) return getLastFrameOfVideo(url).then(resp => {
+                    video.removeEventListener("seeked", callback);
+                    resolve(resp);
+                });
+
+                video.removeEventListener("seeked", callback);
+                fabctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+
+                resolve(fabcan.toDataURL());
+            }
+
+            video.addEventListener("seeked", callback);
+            video.currentTime = video.duration;
+        });
+
+        video.src = url;
+        video.load();
     });
 }
 
@@ -73,6 +85,8 @@ export async function checkRembrandt() {
     var blankrem = new Rembrandt({
         imageA: videoBase64,
         imageB: blankcanv.toDataURL(),
+        // renderComposition: true,
+        // compositionMaskColor: new Rembrandt.Color(0.54, 0.57, 0.62)
     });
 
     var blank = await blankrem.compare();
@@ -85,7 +99,7 @@ export async function checkRembrandt() {
 export async function fetchKanjiDetails(kanji) {
     // Make request for resource - either cache or online
     var baseurl = "https://kanjithing-backend.chocolatejade42.repl.co";
-    var version = (await chrome.management.getSelf()).version;
+    var version = (await chrome.management.getSelf()).version.split(".").slice(0, 2).join(".");
     var infosection = document.getElementById("infosection");
     
     try {

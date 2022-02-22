@@ -1,2 +1,5 @@
 local/
 .env
+
+# Development JS libs
+js/libs/image.js
