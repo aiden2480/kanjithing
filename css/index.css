@@ -21,3 +21,39 @@ header h1 {
     margin-left: 10px;
     font-size: 600%;
 }
+
+/* Install button */
+#installbutton {
+    position: fixed;
+    right: 10px;
+    top: 10px;
+    
+    min-width: fit-content;
+    font-size: 2.75vh;
+    color: white;
+    background-color: #7289da;
+
+    border: none;
+    border-radius: 5px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    padding: 0.75vh 1vw;
+
+    opacity: 0;
+    transition: opacity 300ms ease-in-out, color 300ms ease-in-out;
+}
+
+#installbutton:hover {
+    color: #36393e;
+}
+
+#installbutton img {
+    vertical-align: middle;
+    margin-right: 0.25vw;
+}
+
+#installbutton.available {
+    opacity: 1;
+    cursor: pointer;
+}

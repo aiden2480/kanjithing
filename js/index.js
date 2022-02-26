@@ -7,3 +7,9 @@
 //     });
 //     console.log(data);
 // })();
+
+// Display extension install button if needed
+chrome.extension || document.getElementById("installbutton").classList.add("available");
+chrome.extension || document.getElementById("installbutton").addEventListener("click", () => {
+    window.open("https://chrome.google.com/webstore/detail/kanjithing/nccfelhkfpbnefflolffkclhenplhiab/");
+});
