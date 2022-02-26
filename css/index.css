@@ -1,0 +1,23 @@
+body {
+    color: #7289da;
+    background-color: #36393e;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+/* Header with image and title */
+header {
+    margin: auto;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+}
+
+header * {
+    vertical-align: middle;
+    float: left;
+}
+
+header h1 {
+    margin-left: 10px;
+    font-size: 600%;
+}
