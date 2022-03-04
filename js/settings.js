@@ -64,9 +64,26 @@ function renameSet(id, name) {
             var target = sets.find(x => x.id == id);
             var index = sets.indexOf(target);
             
-            if (target == undefined) return reject(`Element with ID ${id} does not exist`);
+            if (target == undefined) return reject(`Set with ID ${id} does not exist`);
 
             target.name = name;
+            sets[index] = target;
+
+            chrome.storage.local.set({ customsets: sets }, resolve);
+        });
+    });
+}
+
+function editSetKanji(id, kanji) {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get("customsets", result => {
+            var sets = result.customsets;
+            var target = sets.find(x => x.id == id);
+            var index = sets.indexOf(target);
+            
+            if (target == undefined) return reject(`Set with ID ${id} does not exist`);
+
+            target.kanji = kanji;
             sets[index] = target;
 
             chrome.storage.local.set({ customsets: sets }, resolve);
