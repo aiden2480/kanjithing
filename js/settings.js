@@ -18,4 +18,17 @@ chrome.storage.local.get("customsets", result => {
         div.appendChild(span);
         container.appendChild(div);
     });
+
+    // Attach event listners to each checkbox
+    [...container.getElementsByTagName("input")].forEach(item => {
+        item.addEventListener("change", (event) => {
+            chrome.storage.local.get("customsets", result => {
+                var name = event.path[1].children[1].innerHTML;
+                var sets = result.customsets;
+
+                sets.find(i => i.name === name).enabled = event.target.checked;
+                chrome.storage.local.set({ customsets: sets });
+            })
+        });
+    });
 });
