@@ -92,3 +92,4 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
     - S to star/unstar selected kanji
     - Keybinds visible in tooltips
 - [ ] Use static assets for the emojis to keep design consistent between operating systems
+- [ ] Ability to export/import custom sets

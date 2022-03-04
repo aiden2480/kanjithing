@@ -8,6 +8,7 @@ chrome.storage.local.get("customsets", result => {
         var bold = document.createElement("b");
         var span = document.createElement("span");
 
+        div.title = "Set #" + item.id;
         input.type = "checkbox";
         input.checked = item.enabled;
         bold.innerText = item.name;
@@ -32,3 +33,15 @@ chrome.storage.local.get("customsets", result => {
         });
     });
 });
+
+function createSet(name, kanji) {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get("customsets", result => {
+            var sets = result.customsets;
+            var id = result.customsets.slice(-1)[0].id + 1;
+
+            sets.push({ id, name, kanji, enabled: true });
+            chrome.storage.local.set({customsets: sets}, resolve);
+        });
+    });
+}
