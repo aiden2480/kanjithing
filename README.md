@@ -59,13 +59,13 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
 
 ## :memo: Future features
 - [ ] Make the user guess readings of kanji in words
-- [ ] Add a check for `loadKanjiDetails` in case the user has loaded a new kanji by the time info loads
-- [ ] Index page
+- [x] Add a check for `loadKanjiDetails` in case the user has loaded a new kanji by the time info loads
+- [x] Index page
     - Version links and details
 - [ ] Help page
     - How to use the extention, info about tooltips, etc
     - Open on the first install
-- [ ] Settings page
+- [x] Settings page
     - Load custom kanji sets
     - Log in to save
     - Change the speed with which the drawing guide video is played
@@ -93,3 +93,5 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
     - Keybinds visible in tooltips
 - [ ] Use static assets for the emojis to keep design consistent between operating systems
 - [ ] Ability to export/import custom sets
+- [ ] Event listener on the popup script to determine when the set storage has changed
+- [ ] `customsets` -> `sets`

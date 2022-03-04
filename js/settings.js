@@ -56,3 +56,20 @@ function deleteSet(id) {
         });
     });
 }
+
+function renameSet(id, name) {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get("customsets", result => {
+            var sets = result.customsets;
+            var target = sets.find(x => x.id == id);
+            var index = sets.indexOf(target);
+            
+            if (target == undefined) return reject(`Element with ID ${id} does not exist`);
+
+            target.name = name;
+            sets[index] = target;
+
+            chrome.storage.local.set({ customsets: sets }, resolve);
+        });
+    });
+}
