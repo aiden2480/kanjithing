@@ -45,3 +45,14 @@ function createSet(name, kanji) {
         });
     });
 }
+
+function deleteSet(id) {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get("customsets", result => {
+            var sets = result.customsets;
+            var updated = sets.filter(value => value.id != id);
+
+            chrome.storage.local.set({ customsets: updated }, resolve);
+        });
+    });
+}
