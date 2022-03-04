@@ -57,3 +57,8 @@ header h1 {
     opacity: 1;
     cursor: pointer;
 }
+
+div#itemdescription {
+    text-align: center;
+    display: block;
+}

@@ -81,6 +81,7 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
 - [ ] Fix whatever weirdness broke the dynamic browser icon
 - [ ] Able to star/favourite kanji to add them quickly to a custom set.
 - [ ] Right click to remove drawing (all connected strokes)
+- [ ] Add tooltip banner when extension updates
 - [x] Keybinds to navigate the application via keyboard
     - Up/down arrow to navigate between kanji sets
     - Left/right arrow to navigate between kanji in the currently selected set
