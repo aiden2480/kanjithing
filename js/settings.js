@@ -199,3 +199,12 @@ function editSetKanji(id, kanji) {
 
 // Create kanji set nodes
 generateKanjiSets();
+
+// Event listeners
+document.getElementById("createset").addEventListener("click", async () => {
+    await createSet(prompt("Unit name:"), prompt("Kanji in unit:")).then(() => {
+        generateKanjiSets();
+    }).catch(err => {
+        alert(err);
+    });
+});
