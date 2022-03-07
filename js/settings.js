@@ -214,3 +214,24 @@ window.addEventListener("beforeunload", event => {
         return event.returnValue = "Are you sure you want to exit? You have unsaved changes";
     }
 });
+
+document.getElementById("export").addEventListener("click", async () => {
+    var sets = (await chrome.storage.local.get("customsets")).customsets;
+    var encoded = transform(JSON.stringify(sets), 1);
+
+    prompt("Your exported configuration: (Right click to copy)", encoded);
+});
+
+document.getElementById("import").addEventListener("click", async () => {
+    var encoded = prompt("Paste in your configuration string below");
+    var decoded = JSON.parse(transform(encoded, -1));
+
+    await chrome.storage.local.set({ customsets: decoded });
+    generateKanjiSets();
+});
+
+function transform(text, num=1) {
+    return text.split("").map(char => {
+        return String.fromCharCode(char.charCodeAt(0) + num);
+    }).join("");
+}
