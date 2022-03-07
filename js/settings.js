@@ -208,3 +208,9 @@ document.getElementById("createset").addEventListener("click", async () => {
         alert(err);
     });
 });
+
+window.addEventListener("beforeunload", event => {
+    if (document.querySelector("[contentEditable=true]") !== null) {
+        return event.returnValue = "Are you sure you want to exit? You have unsaved changes";
+    }
+});
