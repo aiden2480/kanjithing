@@ -1,0 +1,18 @@
+#setscontainer {
+    display: table;
+}
+
+#setscontainer div {
+    display: table-row;
+}
+
+#setscontainer div * {
+    display: table-cell;
+}
+
+#setscontainer div span {
+    max-width: 30ch;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

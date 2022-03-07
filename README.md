@@ -69,6 +69,10 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
     - Load custom kanji sets
     - Log in to save
     - Change the speed with which the drawing guide video is played
+    - [ ] `customsets` -> `sets`
+    - [ ] Validation when creating a custom set
+    - [ ] Ability to toggle starred/all kanji
+    - [ ] Confirmation dialogue for unsaved changes
 - [ ] Flashcard thing where you get the meaning of the kanji and sample words and have to draw it
 - [ ] Custom flashcards to remember kanji/words
     - Import from quizlet
@@ -94,4 +98,3 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
 - [ ] Use static assets for the emojis to keep design consistent between operating systems
 - [ ] Ability to export/import custom sets
 - [ ] Event listener on the popup script to determine when the set storage has changed
-- [ ] `customsets` -> `sets`
