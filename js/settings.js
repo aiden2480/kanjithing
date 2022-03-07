@@ -46,6 +46,13 @@ async function generateKanjiSets() {
 
     // Attach event listeners to each editable element
     [...container.querySelectorAll("span, b")].forEach(item => {
+        item.addEventListener("keydown", event => {
+            if (event.code == "Enter") {
+                event.path[1].children[3].click();
+                event.preventDefault();
+            }
+        });
+
         // Stop it pasting with all that stupid formatting
         item.addEventListener("paste", event => {
             var paste = (event.clipboardData || window.clipboardData).getData("text");
