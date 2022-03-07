@@ -10,9 +10,29 @@
     display: table-cell;
 }
 
+#setscontainer div b, #setscontainer div span {
+    border: none;
+    text-indent: 0.5em;
+    padding-right: 0.5em;
+    cursor: default;
+}
+
+#setscontainer div button {
+    cursor: pointer;
+}
+
 #setscontainer div span {
-    max-width: 30ch;
+    max-width: 50ch;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+#setscontainer div [contentEditable=true] {
+    border-radius: 5px;
+    border-bottom: 2px solid #7289da;
+    background-color: #4e5259;
+    border-radius: 5px 5px 0px 0px;
+    outline: none;
+    cursor: text;
 }
