@@ -44,6 +44,21 @@ async function generateKanjiSets() {
         });
     });
 
+    // Attach event listeners to each editable element
+    [...container.querySelectorAll("span, b")].forEach(item => {
+        // Stop it pasting with all that stupid formatting
+        item.addEventListener("paste", event => {
+            var paste = (event.clipboardData || window.clipboardData).getData("text");
+            var selection = window.getSelection();
+
+            if (!selection.rangeCount) return false;
+            selection.deleteFromDocument();
+            selection.getRangeAt(0).insertNode(document.createTextNode(paste));
+        
+            event.preventDefault();
+        })
+    });
+
     // Attach event listeners to edit button
     [...container.getElementsByClassName("edit")].forEach(item => {
         item.addEventListener("click", async (event) => {
