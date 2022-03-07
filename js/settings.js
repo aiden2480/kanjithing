@@ -44,6 +44,62 @@ async function generateKanjiSets() {
         });
     });
 
+    // Attach event listeners to edit button
+    [...container.getElementsByClassName("edit")].forEach(item => {
+        item.addEventListener("click", async (event) => {
+            if (item.classList.contains("editing")) return;
+
+            event.path[0].innerText = "✔️";
+            item.classList.add("editing");
+            var targetdiv = event.path[1];
+            var id = targetdiv.id.slice(3);
+
+            // Find target elements
+            var namenode = targetdiv.getElementsByTagName("b")[0];
+            var kanjinode = targetdiv.getElementsByTagName("span")[0];
+            document.createElement("a").contentEditable
+
+            // Mutate elements
+            namenode.contentEditable = true;
+            kanjinode.contentEditable = true;
+
+            // Attach new event listener
+            async function callback(event) {
+                var oldset = await retrieveSet(id);
+                var error = false;
+
+                // Check if errors, otherwise update
+                (namenode.innerText !== oldset.name) && await renameSet(id, namenode.innerText).catch(err => {
+                    error = true;
+                    alert(err);
+                });
+                
+                (kanjinode.innerText !== oldset.kanji) && await editSetKanji(id, kanjinode.innerText).catch(err => {
+                    error = true;
+                    alert(err);
+                });
+
+                // In the event of an error
+                if (error) {
+                    namenode.innerText = oldset.name;
+                    kanjinode.innerText = oldset.kanji;
+                    return;
+                }
+
+                // Disable editing
+                namenode.contentEditable = false;
+                kanjinode.contentEditable = false;
+
+                // Update state
+                event.path[0].innerText = "✏️";
+                item.classList.remove("editing");
+                item.removeEventListener("click", callback);
+            }
+
+            item.addEventListener("click", callback);
+        });
+    });
+
     // Attach event listeners to delete button
     [...container.getElementsByClassName("del")].forEach(item => {
         item.addEventListener("click", async (event) => {
