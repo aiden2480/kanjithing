@@ -117,3 +117,8 @@ div#infosection #exampleslist * {
 #popup-inner span {
     margin: 15px;
 }
+
+#noscript {
+    font-size: 300%;
+    display: block;
+}
