@@ -16,8 +16,15 @@ var defaultsets = [
 ];
 
 
-/* Set up a listener so we can receive messages from the console */
-chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+/* Set up a listener so we can receive messages from the console
+    Because chrome is incredibly dumb and stupid, they won't allow
+    the listener to be an async function, so we have to instead put
+    the async code inside an immediately invoked function, and then
+    return true so that chrome knows to wait for a callback to complete
+    before continuing. The wrapper looks really ugly but it's the best
+    I can do without weird indentation so it's the lesser of two evils
+*/
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {(async () => {
     // {type: ..., data: ...}
 
     switch (message.type) {
@@ -27,10 +34,14 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
         case "setIcon":
             setBrowserIcon(message.data);
             break;
-        default:
+        case "resetKanjiSets":
+            await chrome.storage.local.remove("customsets");
+            await createKanjiSets();
+            sendResponse();
             break;
     }
-});
+
+})(); return true;});
 
 /* Set up a listener for when the extension is installed */
 chrome.runtime.onInstalled.addListener(async reason => {
@@ -39,19 +50,7 @@ chrome.runtime.onInstalled.addListener(async reason => {
 
     // Create default sets
     var sets = (await chrome.storage.local.get("customsets")).customsets;
-    
-    if (sets === undefined) {
-        // {id: ..., name: ..., kanji: ..., enabled: ...}
-        
-        var customsets = defaultsets.map((item, index) => {
-            var name = Object.keys(item)[0];
-            var value = Object.values(item)[0];
-
-            return {id: index, name: name, kanji: value, enabled: true}
-        });
-
-        chrome.storage.local.set({ customsets });
-    }
+    (sets === undefined) && createKanjiSets();
 });
 
 /* Script to change the browser icon */
@@ -75,4 +74,17 @@ function setBrowserIcon(kanji) {
     current = kanji;
     var imageData = context.getImageData(0, 0, 64, 64);
     chrome.action.setIcon({imageData}, () => console.log(`Set browser icon to %c${kanji}`, "color: #7289da"));
-};
+}
+
+async function createKanjiSets() {
+    // {id: ..., name: ..., kanji: ..., enabled: ...}
+    
+    var customsets = defaultsets.map((item, index) => {
+        var name = Object.keys(item)[0];
+        var value = Object.values(item)[0];
+
+        return {id: index, name: name, kanji: value, enabled: true}
+    });
+
+    await chrome.storage.local.set({ customsets });
+}

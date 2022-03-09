@@ -238,6 +238,11 @@ document.getElementById("import").addEventListener("click", async () => {
     generateKanjiSets();
 });
 
+document.getElementById("reset").addEventListener("click", async () => {
+    if (!confirm("Are you sure you want to reset your sets to the default?")) return;
+    chrome.runtime.sendMessage({type: "resetKanjiSets"}, generateKanjiSets);
+});
+
 function transform(text, num=1) {
     return text.split("").map(char => {
         return String.fromCharCode(char.charCodeAt(0) + num);
