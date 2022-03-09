@@ -151,6 +151,7 @@ function createSet(name, setstr) {
         var kanji = setstr.replace(" ", "");
 
         // Ensure set is correct
+        if (!(name.length >= 1 && name.length <= 12)) return reject("Name must be 12 or less characters");
         if (!KANJI_REGEX.test(kanji)) return reject("Invalid kanji string");
 
         sets.push({ id, name, kanji, enabled: true });
@@ -173,6 +174,7 @@ function renameSet(id, name) {
         var target = sets.find(x => x.id == id);
         var index = sets.indexOf(target);
         
+        if (!(name.length >= 1 && name.length <= 12)) return reject("Name must be 12 or less characters");
         if (target == undefined) return reject(`Set with ID ${id} does not exist`);
 
         target.name = name;
@@ -188,6 +190,8 @@ function editSetKanji(id, kanji) {
         var target = sets.find(x => x.id == id);
         var index = sets.indexOf(target);
         
+        // Ensure set is correct
+        if (!KANJI_REGEX.test(kanji)) return reject("Invalid kanji string");
         if (target == undefined) return reject(`Set with ID ${id} does not exist`);
 
         target.kanji = kanji;
@@ -223,8 +227,12 @@ document.getElementById("export").addEventListener("click", async () => {
 });
 
 document.getElementById("import").addEventListener("click", async () => {
-    var encoded = prompt("Paste in your configuration string below");
-    var decoded = JSON.parse(transform(encoded, -1));
+    try {
+        var encoded = prompt("Paste in your configuration string below");
+        var decoded = JSON.parse(transform(encoded, -1));
+    } catch (error) {
+        return alert("Invalid configuration string. Couldn't import configuration");
+    }
 
     await chrome.storage.local.set({ customsets: decoded });
     generateKanjiSets();
