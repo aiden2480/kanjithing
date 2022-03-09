@@ -10,7 +10,7 @@
     display: table-cell;
 }
 
-#setscontainer div b, #setscontainer div span {
+#setscontainer div :is(b, span) {
     border: none;
     text-indent: 0.5em;
     padding-right: 0.5em;
@@ -19,6 +19,15 @@
 
 #setscontainer div button {
     cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #4e5259;
+    margin: 0.75px;
+    transition: background-color 300ms ease-in-out;
+}
+
+#setscontainer div button:hover {
+    background-color: #36393e;
 }
 
 #setscontainer div span {
@@ -35,4 +44,19 @@
     border-radius: 5px 5px 0px 0px;
     outline: none;
     cursor: text;
+}
+
+#bottomrow input[type=button] {
+    border: none;
+    border-bottom: 3px solid #7289da;
+    border-radius: 5px 0px;
+    margin-top: 5px;
+    background-color: #4e5259;
+    color: #7289da;
+    cursor: pointer;
+    transition: background-color 300ms ease-in-out;
+}
+
+#bottomrow input[type=button]:hover {
+    background-color: #36393e;
 }
