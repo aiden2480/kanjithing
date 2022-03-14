@@ -2,36 +2,44 @@ function getLastFrameOfVideo(url) {
     // Take in a video URL and get the last frame from that video.
     // Used to compare video to canvas drawing via Rembrandt.
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         var video = document.createElement("video");
         var fabcan = document.createElement("canvas");
         var fabctx = fabcan.getContext("2d");
 
-        video.preload = "auto";
-        video.crossOrigin = "anonymous";
-
+        video.addEventListener("error", reject);
         video.addEventListener("loadedmetadata", () => {
             fabcan.width = video.videoWidth;
             fabcan.height = video.videoHeight;
 
-            var callback = function () {
-                if (video.currentTime != video.duration) return getLastFrameOfVideo(url).then(resp => {
-                    video.removeEventListener("seeked", callback);
-                    resolve(resp);
-                });
-
-                video.removeEventListener("seeked", callback);
+            video.addEventListener("seeked", () => {
                 fabctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
 
                 resolve(fabcan.toDataURL());
-            }
+            });
 
-            video.addEventListener("seeked", callback);
             video.currentTime = video.duration;
         });
 
-        video.src = url;
+        video.src = await videoURLToDataURL(url);
         video.load();
+    });
+}
+
+function videoURLToDataURL(url) {
+    // Takes the video URL and fully downloads the
+    // video, before converting it to a Data URL
+
+    return new Promise(async (resolve, reject) => {
+        var resp = await fetch(url);
+        var reader = new FileReader();
+
+        reader.addEventListener("load", () => {
+            resolve(reader.result);
+        });
+
+        reader.addEventListener("error", reject);
+        reader.readAsDataURL(await resp.blob());
     });
 }
 
