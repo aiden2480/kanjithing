@@ -1,3 +1,5 @@
+export const KANJI_REGEX = /^[\u4E00-\u9FAF]+$/;
+
 function getLastFrameOfVideo(url) {
     // Take in a video URL and get the last frame from that video.
     // Used to compare video to canvas drawing via Rembrandt.
@@ -125,4 +127,27 @@ export async function fetchKanjiDetails(kanji) {
     }
 
     return json;
+}
+
+// Fetching sets utility functions
+export async function fetchSetFromID(id) {
+    // Finds a set from a given ID
+    var sets = (await chrome.storage.local.get("customsets")).customsets;
+    return sets.find(x => x.id == id);
+}
+
+export async function fetchAnySet() {
+    // Fetch any set in the event that we cannot find the desired one
+    var sets = (await chrome.storage.local.get("customsets")).customsets;
+    return sets[0];
+}
+
+export async function fetchRandomSet() {
+    // Fetch a random set
+    var sets = (await chrome.storage.local.get("customsets")).customsets;
+    return sets[Math.floor(Math.random() * sets.length)];
+}
+
+export async function fetchAllSets() {
+    return (await chrome.storage.local.get("customsets")).customsets;
 }

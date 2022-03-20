@@ -1,10 +1,11 @@
-import { checkRembrandt, fetchKanjiDetails } from "/js/utilities.js"
+import * as utils from "/js/utilities.js";
 
 /* Define elements */
 var canvas = document.getElementById("drawcanvas");
 var video = document.getElementById("kanjiguide");
 var playpause = document.getElementById("playpause");
 var eraseall = document.getElementById("eraseall");
+var selectedset = document.getElementById("selectedset");
 var selectedkanji = document.getElementById("selectedkanji");
 var remcheck = document.getElementById("remcheck");
 var ctx = canvas.getContext("2d");
@@ -13,40 +14,24 @@ var ctx = canvas.getContext("2d");
 var lastPopupTimestamp = 0;
 var currentlyPressedKeys = {};
 
-/* TODO: Find a better home for this variable */
-var wakattaunits = [
-    "学校名前父母生高姉妹兄弟住所色",
-    "好同手紙英語何年私友行毎教場",
-    "早新家入出思来島午後朝夜牛魚族",
-    "会社持待道近町番屋店駅神様区",
-    "時間国先長話見言休聞今食勉強",
-    "帰買電車左右目口書物飲肉昼乗",
-    "曜気分多少元半使天病心楽方作文",
-    "週夏立自赤外西川旅州晩洗持活去",
-    "正冬着安広海古寺東京都北市県",
-    "森山知雪雨字読急洋服動止院漢和",
-    "春秋花南田売耳青白仕事銀犬飯",
-    "林黒羊地夕次体発馬才鳥茶歩鉄"
-];
-wakattaunits.unshift(wakattaunits.join(""));
-
 /* Main function to load a selected kanji */
-function loadKanji(kanji) {
-    // TODO Check if the kanji isn't in dropdown list, and add it if so.
+async function loadKanjiIndex(kanjiIndex) {
+    var kanji = (await utils.fetchSetFromID(selectedset.value)).kanji[kanjiIndex];
+
     console.log(`Loading kanji %c${kanji}`, "color: #3498db");
+    selectedkanji.value = kanjiIndex;
     eraseall.click();
-    selectedkanji.value = kanji;
 
     // Load in examples
     populateInformation(kanji);
 
     // Update saved kanji in database
-    chrome.storage.local.set({ "selectedkanji": kanji });
+    chrome.storage.local.set({ "selectedkanji": kanjiIndex });
 
     // Get video URL and set source
     vidloading = true;
     video.src = "/media/loading.png";
-    fetchKanjiDetails(kanji).then(details => {
+    utils.fetchKanjiDetails(kanji).then(details => {
         video.src = details.video;
     })
 
@@ -57,38 +42,48 @@ function loadKanji(kanji) {
     });
 }
 
-function loadKanjiSet(setindex, defaultkanji=null) {
-    var set = wakattaunits[parseInt(setindex)];
+async function loadKanjiSet(setID, defaultkanji=null) {
+    selectedset.value = setID;
+    var set = await utils.fetchSetFromID(setID);
 
-    console.log(`Loading set %c${setindex} %c${set}`, "color: #9b59b6", "color: #2ecc71");
-    selectedkanji.innerHTML = "";
+    console.log("Loading set ", set);
+    selectedkanji.innerHTML = null;
     
     // Update current unit in database
-    chrome.storage.local.set({ "selectedunit": setindex });
+    chrome.storage.local.set({ "selectedset": setID });
 
-    for (let index in set) {
+    set.kanji.split("").forEach((char, index) => {
         let elem = document.createElement("option");
+        elem.value = index;
         
-        elem.textContent = set[index];
+        elem.textContent = char;
         selectedkanji.appendChild(elem);
-    };
+    });
 
     // Load the kanji
-    defaultkanji ? loadKanji(defaultkanji) : loadKanji(set[0]);
+    (set.kanji.indexOf(defaultkanji) >= 0) ? loadKanjiIndex(set.kanji.indexOf(defaultkanji)) : loadKanjiIndex(0);
 }
 
 /* Add event listeners for the various elements */
-window.addEventListener("load", () => {
-    // Load the selected kanji once prepared
-    chrome.storage.local.get(["selectedunit", "selectedkanji"], result => {
-        console.log(`Retrieved from storage %cset ${result.selectedunit} %ckanji ${result.selectedkanji}`, "color: #e67e22", "color: #fee75c");
-        let unit = result.selectedunit !== undefined ? parseInt(result.selectedunit) : wakattaunits.length - 1;
-        let kanji = result.selectedkanji !== undefined ? result.selectedkanji : wakattaunits[unit][0];
+window.addEventListener("load", async () => {
+    // Load the custom sets into the selector menu
+    (await utils.fetchAllSets()).forEach(set => {
+        if (!set.enabled) return;
+        let elem = document.createElement("option");
 
-        loadKanjiSet(unit, kanji);
-        selectedunit.value = unit;
-        selectedkanji.value = kanji;
+        elem.value = set.id;
+        elem.innerText = set.name;
+        selectedset.appendChild(elem);
     });
+
+    // Load the selected kanji once prepared
+    var result = await chrome.storage.local.get(["selectedset", "selectedkanji"]);
+    let setID = result.selectedset !== undefined ? parseInt(result.selectedset) : (await utils.fetchAnySet()).id;
+    let kanjiIndex = result.selectedkanji !== undefined ? parseInt(result.selectedkanji) : 0;
+
+    await loadKanjiSet(setID, kanjiIndex);
+    selectedset.value = setID;
+    selectedkanji.value = kanjiIndex;
 });
 
 video.addEventListener("loadeddata", () => {
@@ -99,12 +94,12 @@ video.addEventListener("loadeddata", () => {
 
 selectedkanji.addEventListener("change", () => {
     // Load the selected kanji upon dropdown value change
-    loadKanji(selectedkanji.value);
+    loadKanjiIndex(selectedkanji.value);
 });
 
-selectedunit.addEventListener("change", () => {
+selectedset.addEventListener("change", () => {
     // Load the selected unit upon dropdown value change
-    loadKanjiSet(selectedunit.value);
+    loadKanjiSet(selectedset.value);
 });
 
 video.addEventListener("play", () => {
@@ -136,7 +131,7 @@ eraseall.addEventListener("click", () => {
 });
 
 remcheck.addEventListener("click", async () => {
-    var percent = await checkRembrandt();
+    var percent = await utils.checkRembrandt();
     var style = document.getElementById("popup-outer").style;
     var inner = document.getElementById("popup-inner");
     var result = "Try again";
