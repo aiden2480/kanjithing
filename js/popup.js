@@ -192,7 +192,8 @@ document.addEventListener("keydown", event => {
         // TODO Use modulo for ArrowDown and ArrowRight
 
         case "KeyR":
-            loadKanjiIndex(pickopts.random());
+            var removed = pickopts.filter(item => item != selectedkanji.value);
+            loadKanjiIndex(removed.random());
             break;
         case "ArrowUp":
             var thispos = setopts.indexOf(selectedset.value);
@@ -240,11 +241,11 @@ Array.prototype.random = function () {
 
 /* API call functions */
 async function populateInformation(kanji) {
-    var json = await fetchKanjiDetails(kanji);
-    if (selectedkanji.value != kanji) return;
+    // TODO move this to the utilities.js function
+    var json = await utils.fetchKanjiDetails(kanji);
+    // if (selectedkanji.value != kanji) return; // TODO create new check for this
 
     var listelem = document.getElementById("exampleslist");
-    console.debug("populating kanji", kanji, JSON.parse(JSON.stringify(json)));
 
     // Establish readings
     var on = json.onyomi_ja ? json.onyomi_ja.split("、") : [];
@@ -264,7 +265,7 @@ async function populateInformation(kanji) {
     parent.title += "Onyomi are in katakana, while kunyomi are in hiragana";
 
     // Populate examples
-    listelem.textContent = "";
+    listelem.textContent = null;
     (json.examples || []).splice(0, 6).map(item => {
         let elem = document.createElement("li");
         let reading = document.createElement("b");
