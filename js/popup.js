@@ -172,7 +172,7 @@ remcheck.addEventListener("click", async () => {
     }, 2000);
 });
 
-document.addEventListener("keydown", (event) => {
+document.addEventListener("keydown", event => {
     // Disable custom key events when special keys held
     if (event.ctrlKey || event.shiftKey) return;
 
@@ -183,39 +183,40 @@ document.addEventListener("keydown", (event) => {
     if (new Date().getTime() - currentlyPressedKeys[event.code] < 200) return;
     currentlyPressedKeys[event.code] = new Date().getTime();
 
+    // Pull out the IDs from the two select elements
+    var setopts = Array.from(selectedset.children).map(item => item.value);
+    var pickopts = Array.from(selectedkanji.children).map(item => item.value);
+
     // Hotkey callbacks for each key
     switch (event.code) {
+        // TODO Use modulo for ArrowDown and ArrowRight
+
         case "KeyR":
-            var set = wakattaunits[selectedunit.value].replace(selectedkanji.value, "");
-            var index = Math.floor(Math.random() * set.length);
-            
-            loadKanji(set[index]);
+            loadKanjiIndex(pickopts.random());
             break;
         case "ArrowUp":
-            var thispos = parseInt(selectedunit.value);
-            var nextpos = thispos - 1 < 0 ? wakattaunits.length - 1 : thispos - 1;
+            var thispos = setopts.indexOf(selectedset.value);
+            var nextpos = setopts.at(thispos - 1);
 
-            selectedunit.value = nextpos;
             loadKanjiSet(nextpos);
             break;
         case "ArrowDown":
-            var thispos = parseInt(selectedunit.value);
-            var nextpos = thispos + 1 >= wakattaunits.length ? 0 : thispos + 1;
+            var thispos = setopts.indexOf(selectedset.value);
+            var nextpos = thispos < setopts.length - 1 ? setopts.at(thispos + 1) : 0;
 
-            selectedunit.value = nextpos;
             loadKanjiSet(nextpos);
             break;
         case "ArrowLeft":
-            var thispos = wakattaunits[selectedunit.value].indexOf(selectedkanji.value);
-            var nextpos = thispos > 0 ? thispos - 1 : wakattaunits[selectedunit.value].length - 1;
+            var thispos = pickopts.indexOf(selectedkanji.value);
+            var nextpos = pickopts.at(thispos - 1);
             
-            loadKanji(wakattaunits[selectedunit.value][nextpos]);
+            loadKanjiIndex(nextpos);
             break;
         case "ArrowRight":
-            var thispos = wakattaunits[selectedunit.value].indexOf(selectedkanji.value);
-            var nextpos = thispos >= wakattaunits[selectedunit.value].length - 1 ? 0 : thispos + 1;
+            var thispos = pickopts.indexOf(selectedkanji.value);
+            var nextpos = thispos < pickopts.length - 1 ? pickopts.at(thispos + 1) : 0;
             
-            loadKanji(wakattaunits[selectedunit.value][nextpos]);
+            loadKanjiIndex(nextpos);
             break;
         case "Backspace":
         case "Delete":
@@ -231,6 +232,11 @@ document.addEventListener("keyup", (event) => {
 canvas.addEventListener("contextmenu", (event) => {
     event.preventDefault();
 });
+
+// Add random function to the array prototype
+Array.prototype.random = function () {
+    return this[Math.floor(Math.random() * this.length)];
+}
 
 /* API call functions */
 async function populateInformation(kanji) {
