@@ -243,7 +243,7 @@ Array.prototype.random = function () {
 async function populateInformation(kanji) {
     // TODO move this to the utilities.js function
     var json = await utils.fetchKanjiDetails(kanji);
-    // if (selectedkanji.value != kanji) return; // TODO create new check for this
+    if (selectedkanji.selectedOptions[0].innerText != kanji) return;
 
     var listelem = document.getElementById("exampleslist");
 
