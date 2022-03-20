@@ -71,7 +71,8 @@ function convertCanvasToBlackAndWhite(canvas) {
 }
 
 export async function checkRembrandt() {
-    var videoBase64 = await getLastFrameOfVideo((await fetchKanjiDetails(selectedkanji.value)).video);
+    var kanji = selectedkanji.selectedOptions[0].innerText;
+    var videoBase64 = await getLastFrameOfVideo((await fetchKanjiDetails(kanji)).video);
     var blankcanv = document.createElement("canvas");
     var blankctx = blankcanv.getContext("2d");
     
