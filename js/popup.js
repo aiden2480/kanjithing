@@ -223,11 +223,18 @@ document.addEventListener("keydown", event => {
         case "Delete":
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             break;
+        case "Slash":
+            document.getElementById("settings").click();
+            break;
     }
 });
 
 document.addEventListener("keyup", (event) => {
     delete currentlyPressedKeys[event.code];
+});
+
+document.getElementById("settings").addEventListener("click", () => {
+    chrome.runtime.openOptionsPage();
 });
 
 canvas.addEventListener("contextmenu", (event) => {

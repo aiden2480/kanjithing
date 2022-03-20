@@ -101,3 +101,5 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
 - [ ] Use static assets for the emojis to keep design consistent between operating systems
 - [ ] Event listener on the popup script to determine when the set storage has changed
 - [ ] Use data from the KanjiAlive API to do pronuncation/sounds
+- [ ] Make CSS for buttons/inputs be consistent throughout the popup/settings/index pages
+- [ ] Fix overlap interaction with especially long word descriptions (同 kanji)

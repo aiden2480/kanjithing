@@ -4,6 +4,7 @@
     "version": "1.4.2",
     "manifest_version": 3,
     "permissions": ["storage"],
+    "options_page": "settings.html",
     "action": {
         "default_popup": "popup.html"
     },
