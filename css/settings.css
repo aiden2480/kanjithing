@@ -46,7 +46,7 @@
     cursor: text;
 }
 
-#bottomrow input[type=button] {
+#setsconfig input[type=button] {
     border: none;
     border-bottom: 3px solid #7289da;
     border-radius: 5px 0px;
@@ -57,6 +57,14 @@
     transition: background-color 300ms ease-in-out;
 }
 
-#bottomrow input[type=button]:hover {
+#setsconfig input[type=button]:hover {
     background-color: #36393e;
+}
+
+code {
+    padding: 0 5px 0 5px;
+    background: #2F3136;
+    border-radius: 5px;
+    font-family: monospace;
+    font-weight: bold;
 }

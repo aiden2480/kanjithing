@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/settings.css">
     <link rel="icon" href="media/icon64x64.png">
-    <script src="js/settings.js" defer></script>
 </head>
 <body>
     <header>
@@ -16,15 +15,33 @@
         <h1>KanjiThing</h1>
     </header>
 
+    <!-- Config panel for the custom sets -->
     <h2>Kanji sets</h2>
     <div id="setscontainer">
         <!-- Dynamically generated -->
     </div>
 
-    <div id="bottomrow">
+    <!-- Buttons panel for the custom sets -->
+    <div id="setsconfig">
         <input type="button" value="Create new set" id="createset">
         <input type="button" value="Export configuration" id="export">
         <input type="button" value="Import configuration" id="import">
         <input type="button" value="Reset configuration" id="reset">
     </div>
+
+    <!-- Other minor options -->
+    <div id="miscconfig">
+        <div>
+            <input type="checkbox" id="showsettings">
+            <b>Enable settings button on popup page</b>
+            <span>Hint: You can use <code>/</code> to open this page anytime</span>
+
+            <span>🐢 0.7x</span>
+            <input type="range" min="70" max="250" id="videoslider">
+            <span>🐇 2.5x</span>
+        </div>
+    </div>
+
+    <script src="js/settings.js"></script>
 </body>
+</html>

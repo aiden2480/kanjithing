@@ -76,6 +76,10 @@ window.addEventListener("load", async () => {
         selectedset.appendChild(elem);
     });
 
+    // Hide/show settings button
+    var { settingsbtn } = await chrome.storage.local.get("settingsbtn");
+    document.getElementById("settings").style.visibility = settingsbtn ? "visible" : "hidden";
+
     // Load the selected kanji once prepared
     var result = await chrome.storage.local.get(["selectedset", "selectedkanji"]);
     let setID = result.selectedset !== undefined ? parseInt(result.selectedset) : (await utils.fetchAnySet()).id;
@@ -102,9 +106,11 @@ selectedset.addEventListener("change", () => {
     loadKanjiSet(selectedset.value);
 });
 
-video.addEventListener("play", () => {
+video.addEventListener("play", async () => {
     // Sets the options for the video element (once only)
-    video.playbackRate = 0.85;
+    var { videoSpeed } = await chrome.storage.local.get("videoSpeed");
+    video.playbackRate = videoSpeed;
+
     canvas.width = video.offsetWidth;
     canvas.height = video.offsetHeight;
 }, {once: true});

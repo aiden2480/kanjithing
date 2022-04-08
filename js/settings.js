@@ -1,4 +1,5 @@
 const KANJI_REGEX = /^[\u4E00-\u9FAF]+$/;
+generateSettingsPage();
 
 async function generateKanjiSets() {
     var container = document.getElementById("setscontainer");
@@ -135,6 +136,28 @@ async function generateKanjiSets() {
     });
 }
 
+async function generateMisc() {
+    var { settingsbtn, videoSpeed } = await chrome.storage.local.get(["settingsbtn", "videoSpeed"]);
+    
+    document.getElementById("showsettings").checked = settingsbtn;
+    document.getElementById("videoslider").value = videoSpeed * 100;
+}
+
+async function generateSettingsPage() {
+    // Ensure default settings are available
+    await ensureDefaultConfiguration();
+
+    generateKanjiSets();
+    generateMisc();
+}
+
+function ensureDefaultConfiguration() {
+    return new Promise((resolve, reject) => {
+        chrome.runtime.sendMessage({type: "ensureDefaultConfig"}, resolve);
+    });
+}
+
+// Set editing functions
 function retrieveSet(id) {
     return new Promise(async (resolve, reject) => {
         var sets = (await chrome.storage.local.get("customsets")).customsets;
@@ -201,9 +224,6 @@ function editSetKanji(id, kanji) {
     });
 }
 
-// Create kanji set nodes
-generateKanjiSets();
-
 // Event listeners
 document.getElementById("createset").addEventListener("click", async () => {
     await createSet(prompt("Unit name:"), prompt("Kanji in unit:")).then(() => {
@@ -243,6 +263,17 @@ document.getElementById("reset").addEventListener("click", async () => {
     chrome.runtime.sendMessage({type: "resetKanjiSets"}, generateKanjiSets);
 });
 
+document.getElementById("showsettings").addEventListener("change", async (event) => {
+    var settingsbtn = event.target.checked;
+    chrome.storage.local.set({ settingsbtn });
+});
+
+document.getElementById("videoslider").addEventListener("change", async (event) => {
+    var videoSpeed = event.target.value / 100;
+    chrome.storage.local.set({ videoSpeed });
+})
+
+// Helper functions
 function transform(text, num=1) {
     return text.split("").map(char => {
         return String.fromCharCode(char.charCodeAt(0) + num);

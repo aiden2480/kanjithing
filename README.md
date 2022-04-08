@@ -76,6 +76,7 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
     - [x] Ability to export/import custom sets
     - [ ] Fall back to default set if the set we are trying to load is deleted
     - [ ] Use the `var { sets } = ...` thing
+    - [ ] Show alert to confirm settings were saved
 - [ ] Flashcard thing where you get the meaning of the kanji and sample words and have to draw it
 - [ ] Custom flashcards to remember kanji/words
     - Import from quizlet
@@ -103,3 +104,4 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
 - [ ] Use data from the KanjiAlive API to do pronuncation/sounds
 - [ ] Make CSS for buttons/inputs be consistent throughout the popup/settings/index pages
 - [ ] Fix overlap interaction with especially long word descriptions (同 kanji)
+- [ ] Change the browser icon when the extension is loaded locally to prevent confusion

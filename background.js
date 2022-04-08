@@ -39,19 +39,31 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {(async 
             await createKanjiSets();
             sendResponse();
             break;
+        case "ensureDefaultConfig":
+            await ensureDefaultConfiguration();
+            sendResponse();
+            break;
     }
 
-})(); return true;});
+})(); return true});
 
 /* Set up a listener for when the extension is installed */
 chrome.runtime.onInstalled.addListener(async reason => {
     console.log("Install event fired with", reason);
     chrome.runtime.setUninstallURL("https://kanjithing-backend.chocolatejade42.repl.co/uninstall");
 
+    await ensureDefaultConfiguration();
+});
+
+async function ensureDefaultConfiguration() {
     // Create default sets
     var sets = (await chrome.storage.local.get("customsets")).customsets;
-    (sets === undefined) && createKanjiSets();
-});
+    (sets === undefined) && await createKanjiSets();
+
+    // Create default settings
+    var { config } = await chrome.storage.local.get("config");
+    (config === undefined) && await createDefaultConfig();
+}
 
 /* Script to change the browser icon */
 function setBrowserIcon(kanji) {
@@ -87,4 +99,10 @@ async function createKanjiSets() {
     });
 
     await chrome.storage.local.set({ customsets });
+}
+
+async function createDefaultConfig() {
+    var { videoSpeed, settingsbtn} = await chrome.storage.local.get(["videoSpeed", "settingsbtn"]);
+    (videoSpeed !== undefined) || await chrome.storage.local.set({ videoSpeed: 0.8 });
+    (settingsbtn !== undefined) || await chrome.storage.local.set({ settingsbtn: true });
 }
