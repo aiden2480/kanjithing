@@ -47,13 +47,40 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {(async 
 
 })(); return true});
 
-/* Set up a listener for when the extension is installed */
+/* Set up a listener for when the extension is installed/chrome restarts */
 chrome.runtime.onInstalled.addListener(async reason => {
     console.log("Install event fired with", reason);
-    chrome.runtime.setUninstallURL("https://kanjithing-backend.chocolatejade42.repl.co/uninstall");
-
+    
+    if ((await chrome.management.getSelf()).installType !== "development")
+        chrome.runtime.setUninstallURL("https://kanjithing-backend.chocolatejade42.repl.co/uninstall");
+    
     await ensureDefaultConfiguration();
+    await ensureCorrectKanjiIcon();
+    await ensureBetaBadge();
 });
+
+chrome.runtime.onStartup.addListener(async () => {
+    await ensureDefaultConfiguration();
+    await ensureCorrectKanjiIcon();    
+    await ensureBetaBadge();
+});
+
+/* Configuration functions called above */
+async function ensureCorrectKanjiIcon() {
+    var { customsets, selectedset, selectedkanji } = await chrome.storage.local.get();
+    if ([ customsets, selectedset, selectedkanji ].includes(undefined)) return;
+
+    setBrowserIcon(customsets[selectedset].kanji[selectedkanji], bypass=true);
+}
+
+async function ensureBetaBadge() {
+    // Ensure that the "Beta" badge is present if necessary
+
+    if ((await chrome.management.getSelf()).installType === "development") {
+        chrome.action.setBadgeText({ text: "B" });
+        chrome.action.setBadgeBackgroundColor({ color: "#304db6" });
+    }
+}
 
 async function ensureDefaultConfiguration() {
     // Create default sets
@@ -66,9 +93,9 @@ async function ensureDefaultConfiguration() {
 }
 
 /* Script to change the browser icon */
-function setBrowserIcon(kanji) {
+function setBrowserIcon(kanji, bypass=false) {
     // https://jsfiddle.net/1u37ovj9/
-    if (current === kanji) return;
+    if (current === kanji && !bypass) return;
 
     var canvas = new OffscreenCanvas(64, 64);
     var context = canvas.getContext("2d");
@@ -85,9 +112,10 @@ function setBrowserIcon(kanji) {
 
     current = kanji;
     var imageData = context.getImageData(0, 0, 64, 64);
-    chrome.action.setIcon({imageData}, () => console.log(`Set browser icon to %c${kanji}`, "color: #7289da"));
+    chrome.action.setIcon({ imageData }, () => console.log(`Set browser icon to %c${kanji}`, "color: #7289da"));
 }
 
+/* Creates defult configuration as required by ensureDefaultConfiguration */
 async function createKanjiSets() {
     // {id: ..., name: ..., kanji: ..., enabled: ...}
     
@@ -102,7 +130,7 @@ async function createKanjiSets() {
 }
 
 async function createDefaultConfig() {
-    var { videoSpeed, settingsbtn} = await chrome.storage.local.get(["videoSpeed", "settingsbtn"]);
+    var { videoSpeed, settingsbtn } = await chrome.storage.local.get(["videoSpeed", "settingsbtn"]);
     (videoSpeed !== undefined) || await chrome.storage.local.set({ videoSpeed: 0.8 });
     (settingsbtn !== undefined) || await chrome.storage.local.set({ settingsbtn: true });
 }
