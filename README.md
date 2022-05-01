@@ -58,17 +58,17 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
 ```
 
 ## :memo: Future features
+- [ ] Able to star/favourite kanji to add them quickly to a custom set.
 - [ ] Make the user guess readings of kanji in words
-- [ ] Add a check for `loadKanjiDetails` in case the user has loaded a new kanji by the time info loads
-- [ ] Index page
-    - Version links and details
 - [ ] Help page
     - How to use the extention, info about tooltips, etc
     - Open on the first install
-- [ ] Settings page
-    - Load custom kanji sets
-    - Log in to save
-    - Change the speed with which the drawing guide video is played
+- [x] Settings page
+    - [ ] `customsets` -> `sets`
+    - [ ] Use the `var { sets } = ...` thing
+    - [ ] Ability to toggle starred/all kanji
+    - [ ] Fall back to default set if the set we are trying to load is deleted
+    - [ ] Show alert to confirm settings were saved
 - [ ] Flashcard thing where you get the meaning of the kanji and sample words and have to draw it
 - [ ] Custom flashcards to remember kanji/words
     - Import from quizlet
@@ -78,9 +78,8 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
     - [Available on GitHub](https://github.com/kanjialive/kanji-data-media/blob/master/kanji-animations/stroke_timings) with timestamps
 - [ ] Grey loading screen should only appear after a certain amount of time to account for cached requests that resolve quickly
     - To prevent grey/white flashes that occur when the next character loads quickly
-- [ ] Fix whatever weirdness broke the dynamic browser icon
-- [ ] Able to star/favourite kanji to add them quickly to a custom set.
 - [ ] Right click to remove drawing (all connected strokes)
+- [ ] Add tooltip banner when extension updates
 - [x] Keybinds to navigate the application via keyboard
     - Up/down arrow to navigate between kanji sets
     - Left/right arrow to navigate between kanji in the currently selected set
@@ -91,3 +90,9 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
     - S to star/unstar selected kanji
     - Keybinds visible in tooltips
 - [ ] Use static assets for the emojis to keep design consistent between operating systems
+- [ ] Event listener on the popup script to determine when the set storage has changed
+- [ ] Use data from the KanjiAlive API to do pronuncation/sounds
+- [ ] Make CSS for buttons/inputs be consistent throughout the popup/settings/index pages
+- [ ] Fix overlap interaction with especially long word descriptions (同 kanji)
+- [ ] Use a RapidAPI key in the application to fetch data (Replit downtime)
+- [ ] Unspaghettify everything

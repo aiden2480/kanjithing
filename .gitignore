@@ -1,5 +1,8 @@
+# Project custom
 local/
 .env
 
-# Development JS libs
-js/libs/image.js
+# Editor settings folders
+.vscode/
+.vs/
+

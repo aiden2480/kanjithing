@@ -117,3 +117,26 @@ div#infosection #exampleslist * {
 #popup-inner span {
     margin: 15px;
 }
+
+#noscript {
+    font-size: 300%;
+    display: block;
+}
+
+#settings {
+    position: fixed;
+    right: 4px;
+    bottom: 4px;
+
+    height: 4ch;
+    vertical-align: middle;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #4e5259;
+    transition: background-color 300ms ease-in-out;
+}
+
+#settings:hover {
+    background-color: #36393e;
+}
