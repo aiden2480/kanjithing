@@ -15,6 +15,8 @@ Credit to the following sources for the webstore API process they made in JS.
 > https://github.com/mnao305/chrome-extension-upload
 > https://github.com/fregante/chrome-webstore-upload
 
+This file will also automatically create a new release on the GitHub repository
+if the manifest version changes, no matter if it is a major, minor, or micro release.
 
 Note: this file should be executed from the root directory, not ./github/workflows
 """
@@ -27,6 +29,10 @@ import json
 import zipfile
 import requests
 import argparse
+import functools
+import traceback
+
+from collections import OrderedDict
 from packaging.version import Version
 
 # Chrome webstore URLs
@@ -39,28 +45,19 @@ PUBLISH_URL = f"https://www.googleapis.com/chromewebstore/v1.1/items/{PACKAGE_ID
 class ChromeWebstoreStupid(Exception):
     pass
 
-# Main program functions
+# Chrome webstore upload functions
 def compare_manifest_versions() -> tuple[Version]:
     """
     Compares the manifest in this git commit with the one in the previous
     commit. Returns the two version values.
     """
-    # TODO: Doesn't run if the version wasn't changed in the last commit
-
-    # Setup request variables
-    with open(".github/workflows/query.gql") as fp:
-        token = os.environ["GITHUB_TOKEN"]
-        headers = {"Authorization": f"Bearer {token}"}
-        body = {"query": fp.read()}
-
-    # Make query to GraphQL API
-    resp = requests.post("https://api.github.com/graphql", json=body, headers=headers)
-    data = resp.json()["data"]
+    # FIXME: Doesn't run if the version wasn't changed in the last commit
 
     # Find first and last version data
-    nodes = data["repository"]["defaultBranchRef"]["target"]["history"]["nodes"]
+    data = make_graphql_request()
+    nodes = data["repository"]["main"]["target"]["history"]["nodes"]
     first = json.loads(nodes[0]["file"]["object"]["text"])
-    last = json.loads(nodes[-1]["file"]["object"]["text"])
+    last = json.loads(nodes[1]["file"]["object"]["text"])
 
     # Parse strings and return
     new = Version(first["version"])
@@ -146,6 +143,82 @@ def publish_package(sess: requests.Session) -> dict:
     
     return data
 
+# GitHub release functions
+def github_release():
+    """
+    Creates a release on the GitHub repository if the manifest version has changed at all.
+    """
+
+    data = make_graphql_request()
+    commits = data["repository"]["main"]["target"]["history"]["nodes"]
+    alreadyreleased = [n["node"]["tagName"][1:] for n in data["repository"]["releases"]["edges"]]
+
+    # Parse commit data
+    nonreleases = []
+    releases = OrderedDict()
+    lastver = Version("0.0.0")
+
+    for commit in commits[::-1]:
+        if not commit["file"]:
+            nonreleases.append(commit)
+            continue
+    
+        thisver = Version(json.loads(commit["file"]["object"]["text"])["version"])
+
+        if not thisver > lastver:
+            nonreleases.append(commit)
+            continue
+        
+        nonreleases.append(commit)
+        releases[thisver.base_version] = nonreleases.copy()
+        nonreleases.clear()
+        lastver = thisver
+    
+    # Send request(s) to create a new release
+    headers = {"Authorization": "Bearer " + os.environ["GITHUB_TOKEN"]}
+    lastver = Version("0.0.0")
+
+    for release, commits in releases.items():
+        if release in alreadyreleased:
+            print(f"Skipping release {release} because it has already been published")
+            continue
+
+        concat = lambda c: "• [`" + c["oid"][0:7] + "`](" + c["url"] + ") " + c["headline"]
+        body = map(concat, commits[::-1])
+        thisver = Version(release)
+        
+        payload = {
+            "tag_name": "v" + release,
+            "target_commitish": commits[-1]["oid"],
+            "name": f"Release v{release}",
+            "body": "\n".join(body),
+            "generate_release_notes": True,
+            "prerelease": not (thisver.major > lastver.major or thisver.minor > lastver.minor),
+        }
+
+        resp = requests.post("https://api.github.com/repos/aiden2480/kanjithing/releases", headers=headers, json=payload)
+        resp.raise_for_status()
+        lastver = thisver
+        print(thisver, "released")
+
+# Helper functions
+@functools.cache
+def make_graphql_request() -> dict:
+    """
+    Makes the GraphQL request in .github/workflows/query.gql
+    This is called twice so is cached to prevent redundant wait time
+    """
+
+    # Setup request variables
+    with open(".github/workflows/query.gql") as fp:
+        token = os.environ["GITHUB_TOKEN"]
+        headers = {"Authorization": f"Bearer {token}"}
+        body = {"query": fp.read()}
+
+    # Make query to GraphQL API
+    resp = requests.post("https://api.github.com/graphql", json=body, headers=headers)
+    return resp.json()["data"]
+
 
 if __name__ == "__main__":
     # Load dotenv if locally testing
@@ -179,12 +252,22 @@ if __name__ == "__main__":
         exit(0)
     
     elif not (new.major > old.major or new.minor > old.minor):
-        print(f"No major or minor manifest version change detected")
+        print("No major or minor manifest version change detected. "
+              "Creating GitHub release without publishing on the webstore")
+        
+        github_release()
         exit(0)
     
     else:
-        print("Updating webstore application")
+        print("Creating release and updating webstore application")
     
+    # Create GitHub release
+    try:
+        print("Trying to create a GitHub release")
+        github_release()
+    except Exception:
+        print(f"Error creating release, skipping\n\n{traceback.format_exc()}\n")
+
     # Create our session object and generate an access token
     sess = requests.Session()
     sess.headers.update({

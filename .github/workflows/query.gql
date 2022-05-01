@@ -1,19 +1,33 @@
 {
   repository(owner: "aiden2480", name: "kanjithing") {
-    defaultBranchRef {
+    main: defaultBranchRef {
       target {
         ... on Commit {
-          history(first: 2) {
+          history {
             nodes {
+              oid
+              pushedDate
+              headline: messageHeadline
+              url: commitUrl
+              committedDate
+
               file(path: "manifest.json") {
                 object {
                   ... on Blob {
-                    text abbreviatedOid
+                    text
                   }
                 }
               }
             }
           }
+        }
+      }
+    }
+
+    releases(last: 10) {
+      edges {
+        node {
+          tagName
         }
       }
     }
