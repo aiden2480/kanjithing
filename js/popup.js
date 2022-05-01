@@ -15,18 +15,18 @@ var lastPopupTimestamp = 0;
 var currentlyPressedKeys = {};
 
 /* Main function to load a selected kanji */
-async function loadKanjiIndex(kanjiIndex) {
-    var kanji = (await utils.fetchSetFromID(selectedset.value)).kanji[kanjiIndex];
+async function loadKanjiIndex(index) {
+    var kanji = (await utils.fetchSetFromID(selectedset.value)).kanji[index];
 
     console.log(`Loading kanji %c${kanji}`, "color: #3498db");
-    selectedkanji.value = kanjiIndex;
+    selectedkanji.value = index;
     eraseall.click();
 
     // Load in examples
     populateInformation(kanji);
 
     // Update saved kanji in database
-    chrome.storage.local.set({ "selectedkanji": kanjiIndex });
+    chrome.storage.local.set({ "selectedkanji": index });
 
     // Get video URL and set source
     vidloading = true;
@@ -42,7 +42,7 @@ async function loadKanjiIndex(kanjiIndex) {
     });
 }
 
-async function loadKanjiSet(setID, defaultkanji=null) {
+async function loadKanjiSet(setID, index=0) {
     selectedset.value = setID;
     var set = await utils.fetchSetFromID(setID);
 
@@ -61,7 +61,7 @@ async function loadKanjiSet(setID, defaultkanji=null) {
     });
 
     // Load the kanji
-    (set.kanji.indexOf(defaultkanji) >= 0) ? loadKanjiIndex(set.kanji.indexOf(defaultkanji)) : loadKanjiIndex(0);
+    loadKanjiIndex(index);
 }
 
 /* Add event listeners for the various elements */
@@ -199,7 +199,7 @@ document.addEventListener("keydown", event => {
 
         case "KeyR":
             var removed = pickopts.filter(item => item != selectedkanji.value);
-            loadKanjiIndex(removed.random());
+            loadKanjiIndex(parseInt(removed.random()));
             break;
         case "ArrowUp":
             var thispos = setopts.indexOf(selectedset.value);
