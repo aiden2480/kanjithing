@@ -1,5 +1,13 @@
+body {
+    max-width: 550px;
+    margin: auto;
+    zoom: 2vh;
+}
+
 #setscontainer {
     display: table;
+    max-width: 500px;
+    margin: auto;
 }
 
 #setscontainer div {

@@ -65,6 +65,15 @@ chrome.runtime.onStartup.addListener(async () => {
     await ensureBetaBadge();
 });
 
+chrome.storage.onChanged.addListener(async (changes, namespace) => {
+    // Console log when storage values change
+    if ((await chrome.management.getSelf()).installType !== "development") return;
+
+    for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
+        console.debug(`${key} : ${oldValue} -> ${newValue}`);
+    }
+});
+
 /* Configuration functions called above */
 async function ensureCorrectKanjiIcon() {
     var { customsets, selectedset, selectedkanji } = await chrome.storage.local.get();

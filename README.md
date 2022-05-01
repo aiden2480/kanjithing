@@ -58,24 +58,16 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
 ```
 
 ## :memo: Future features
+- [ ] Able to star/favourite kanji to add them quickly to a custom set.
 - [ ] Make the user guess readings of kanji in words
-- [x] Add a check for `loadKanjiDetails` in case the user has loaded a new kanji by the time info loads
-- [x] Index page
-    - Version links and details
 - [ ] Help page
     - How to use the extention, info about tooltips, etc
     - Open on the first install
 - [x] Settings page
-    - Load custom kanji sets
-    - Log in to save
-    - Change the speed with which the drawing guide video is played
-    - [x] `customsets` -> `sets`
-    - [x] Validation when creating a custom set
-    - [ ] Ability to toggle starred/all kanji
-    - [x] Confirmation dialogue for unsaved changes
-    - [x] Ability to export/import custom sets
-    - [ ] Fall back to default set if the set we are trying to load is deleted
+    - [ ] `customsets` -> `sets`
     - [ ] Use the `var { sets } = ...` thing
+    - [ ] Ability to toggle starred/all kanji
+    - [ ] Fall back to default set if the set we are trying to load is deleted
     - [ ] Show alert to confirm settings were saved
 - [ ] Flashcard thing where you get the meaning of the kanji and sample words and have to draw it
 - [ ] Custom flashcards to remember kanji/words
@@ -86,8 +78,6 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
     - [Available on GitHub](https://github.com/kanjialive/kanji-data-media/blob/master/kanji-animations/stroke_timings) with timestamps
 - [ ] Grey loading screen should only appear after a certain amount of time to account for cached requests that resolve quickly
     - To prevent grey/white flashes that occur when the next character loads quickly
-- [ ] Fix whatever weirdness broke the dynamic browser icon
-- [ ] Able to star/favourite kanji to add them quickly to a custom set.
 - [ ] Right click to remove drawing (all connected strokes)
 - [ ] Add tooltip banner when extension updates
 - [x] Keybinds to navigate the application via keyboard
@@ -104,4 +94,5 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
 - [ ] Use data from the KanjiAlive API to do pronuncation/sounds
 - [ ] Make CSS for buttons/inputs be consistent throughout the popup/settings/index pages
 - [ ] Fix overlap interaction with especially long word descriptions (同 kanji)
-- [ ] Change the browser icon when the extension is loaded locally to prevent confusion
+- [ ] Use a RapidAPI key in the application to fetch data (Replit downtime)
+- [ ] Unspaghettify everything

@@ -31,15 +31,25 @@
 
     <!-- Other minor options -->
     <div id="miscconfig">
-        <div>
-            <input type="checkbox" id="showsettings">
-            <b>Enable settings button on popup page</b>
-            <span>Hint: You can use <code>/</code> to open this page anytime</span>
+        <h2>Other configuration</h2>
 
-            <span>🐢 0.7x</span>
-            <input type="range" min="70" max="250" id="videoslider">
-            <span>🐇 2.5x</span>
-        </div>
+        <table>
+            <tr>
+                <td><b>Enable settings button on popup page</b></td>
+                <td>
+                    <input type="checkbox" id="showsettings">
+                    <span>Hint: You can use <code>/</code> to open this page anytime</span>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Drawing guide video playback speed</b></td>
+                <td>
+                    <span>🐢 0.7x</span>
+                    <input type="range" min="70" max="250" id="videoslider">
+                    <span>🐇 2.5x</span>
+                </td>
+            </tr>
+        </table>
     </div>
 
     <script src="js/settings.js"></script>
