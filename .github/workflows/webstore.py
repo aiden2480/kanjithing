@@ -92,7 +92,7 @@ def generate_zipfile() -> io.BytesIO:
     
     print("\nGenerating zip file")
     zipped = zipfile.ZipFile(buffer := io.BytesIO(), "w")
-    pattern = re.compile(r".\\(.git\\|.github\\|local\\|.gitignore|README.md)")
+    pattern = re.compile(r".\\(.git\\|.github\\|local\\|.gitignore|README.md|LICENCE)")
 
     for root, dirs, files in os.walk("."):
         for name in files:
