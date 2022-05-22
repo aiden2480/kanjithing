@@ -62,3 +62,29 @@ div#itemdescription {
     text-align: center;
     display: block;
 }
+
+th {
+    border-bottom: 2px solid #787D82;
+}
+
+tr > :first-child:not(th) {
+    border-right: 1px solid #787D82;
+    white-space: nowrap;
+}
+
+td {
+    padding: 10px;
+    border-bottom: 1px solid #787D82;
+}
+
+table#changelog h2 {
+    margin-bottom: 0px;
+}
+
+a {
+    color: #6665d2;
+}
+
+h4 {
+    margin: 0px;
+}
