@@ -51,6 +51,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {(async 
 chrome.runtime.onInstalled.addListener(async reason => {
     console.log("Install event fired with", reason);
     
+    // Bugfix Issue #21
+    var { selectedkanji } = await chrome.storage.local.get();
+    if (typeof selectedkanji !== "number") {
+        await chrome.storage.local.set({ selectedkanji: 0 });
+    }
+
     if ((await chrome.management.getSelf()).installType !== "development")
         chrome.runtime.setUninstallURL("https://kanjithing-backend.chocolatejade42.repl.co/uninstall");
     

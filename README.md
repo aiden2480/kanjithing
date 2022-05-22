@@ -96,3 +96,5 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
 - [ ] Fix overlap interaction with especially long word descriptions (同 kanji)
 - [ ] Use a RapidAPI key in the application to fetch data (Replit downtime)
 - [ ] Unspaghettify everything
+- [ ] Instead of shifting each character over one, convert it to binary instead
+    - Ticks off the "syllabus components" requirement
