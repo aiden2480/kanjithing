@@ -69,7 +69,7 @@ function makeHTML(soup) {
     const urls = /\[`(\w+)`]\((\S+)\)/gm;       // Any URLS referencing Git commits
     const bold = /\*{2}(.+)\*{2}/gm;            // Text surrounded by asterisks
     const comp = /https.+\/compare\/(\S+)/gm;   // The compare x with y commit links
-    const tick = /`(.+)`/gm;                    // Code snippets encased in backticks
+    const tick = /`([^`]+)`/gm;                 // Code snippets encased in backticks
     const bol2 = /^## (.+)$/gm;                 // Two hashtags preceeding H2 text
     const pull = /https.+\/pull\/(\d+)/gm;      // GitHub Pulls URL
 
