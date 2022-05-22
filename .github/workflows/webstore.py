@@ -197,7 +197,11 @@ def github_release():
         }
 
         resp = requests.post("https://api.github.com/repos/aiden2480/kanjithing/releases", headers=headers, json=payload)
-        resp.raise_for_status()
+
+        # resp.raise_for_status()
+        if not resp.ok:
+            print(f"Request returned HTTP status {resp.status_code}: {resp.reason}")
+
         lastver = thisver
         print(thisver, "released")
 

@@ -5,6 +5,8 @@
     <a href="https://chrome.google.com/webstore/detail/kanjithing/nccfelhkfpbnefflolffkclhenplhiab/reviews"><img src="https://img.shields.io/chrome-web-store/rating/nccfelhkfpbnefflolffkclhenplhiab?color=orange" title="Google chrome store rating" /></a>
     <a href="https://chrome.google.com/webstore/detail/kanjithing/nccfelhkfpbnefflolffkclhenplhiab"><img src="https://img.shields.io/chrome-web-store/v/nccfelhkfpbnefflolffkclhenplhiab?color=yellow" title="Last version published on chrome web store" /></a>
     <a href="https://github.com/aiden2480/kanjithing/actions/workflows/updatewebstore.yml"><img src="https://img.shields.io/github/workflow/status/aiden2480/kanjithing/Publish%20to%20chrome%20webstore?label=Publish%20workflow&color=green" title="Webstore publish workflow status" /></a>
+    <a href="https://github.com/aiden2480/kanjithing/blob/main/LICENCE"><img src="https://img.shields.io/github/license/aiden2480/kanjithing?color=blue" /></a>
+    <a href="https://aiden2480.github.io/kanjithing/"><img src="https://img.shields.io/badge/GitHub%20Pages-active-af6eeb" /></a>
 </div>
 
 ## :shrug: A google chrome extension for practising kanji

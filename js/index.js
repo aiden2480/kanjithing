@@ -28,7 +28,6 @@
         tr.appendChild(one);
         tr.appendChild(two);
         table.appendChild(tr);
-        console.log(index, element);
     });
 })();
 
@@ -135,7 +134,7 @@ function makeHTML(soup) {
         soup = soup.replace("\n", "<br>");
     } while (soup.indexOf("\n") !== -1);
 
-    console.log(soup);
+    
     return soup;
 }
 
