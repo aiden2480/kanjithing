@@ -1,5 +1,3 @@
-export const KANJI_REGEX = /^[\u4E00-\u9FAF]+$/;
-
 function getLastFrameOfVideo(url) {
     // Take in a video URL and get the last frame from that video.
     // Used to compare video to canvas drawing via Rembrandt.
