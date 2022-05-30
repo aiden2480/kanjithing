@@ -6,14 +6,12 @@
  * @returns Binary encoded string
  */
 export function encodeStringToBinary(string) {
-    var raw = "";
-
-    string.match(/./gu).map(char => {
-        raw += convertCharToBinary(char);
+    var encoded = string.match(/./gu).map(char => {
+        return convertCharToBinary(char);
     });
 
     // Add a space after every 8th character
-    return raw.match(/.{8}/g).join(" ");
+    return encoded.join(" ");
 }
 
 /**
@@ -186,14 +184,13 @@ function convertDecToBinary(num) {
  * @returns Integer
  */
 function convertBinaryToDec(bin) {
-    var output = 0;
-
-    bin.split("").forEach((item, index) => {
+    var nums = bin.split("").map((item, index) => {
         let power = bin.length - index - 1;
-        output += parseInt(item) * 2 ** power;
+        
+        return parseInt(item) * 2 ** power;
     });
-
-    return output;
+    
+    return nums.reduce((a, b) => a + b);
 }
 
 /**
