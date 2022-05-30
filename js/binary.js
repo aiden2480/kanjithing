@@ -9,6 +9,41 @@ export function encodeStringToBinary(string) {
     return raw.match(/.{8}/g).join(" ");
 }
 
+export function decodeBinaryToString(binary) {
+    var input = binary.split(" ");
+    var output = [];
+
+    // Construct a 2D array of bytes, where each array
+    // holds each byte required for a character
+    input.forEach(byte => {
+        if (byte.startsWith(1) && !byte.startsWith(11)) {
+    		output.at(-1).push(byte);
+        } else {
+            output.push([ byte ]);
+        }
+    });
+
+    // Concatenate each byte back to a string
+    output = output.map(item => {
+        const binary2string = x => String.fromCharCode(convertBinaryToDec(x));
+
+        // Treat the special case of one byte
+		if (item.length == 1) return binary2string(item[0]);
+    
+        // Remove the prestring that tells us how many bytes are coming
+        var decoded = item[0].slice(item.length);
+
+        // Remove the prepadding of 10 from every byte afterwards and append
+        item.slice(1).forEach(item => {
+            decoded += item.slice(2);
+        });
+        
+        return binary2string(decoded);
+    }).join("");
+
+    return output;
+}
+
 function convertCharToBinary(char) {
     var code = char.codePointAt(); // Lookup the UTF8 code
     var bits = convertDecToBinary(code);
