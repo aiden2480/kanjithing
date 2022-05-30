@@ -44,6 +44,38 @@ export function decodeBinaryToString(binary) {
     return output;
 }
 
+export function encodeBinaryToHex(binary) {
+    var input = binary.replaceAll(" ", "").match(/.{4}/g);
+    var conv = {
+        10: "A", 11: "B", 12: "C",
+        13: "D", 14: "E", 15: "F",
+    }
+
+    var output = input.map(nibble => {
+        var decimal = convertBinaryToDec(nibble);
+        var char = conv[decimal] || decimal;
+
+        return char;
+    });
+
+    return output.join("");
+}
+
+export function decodeHexToBinary(hex) {
+    var conv = {
+        "A": 10, "B": 11, "C": 12,
+        "D": 13, "E": 14, "F": 15,
+    }
+
+    var output = Array.from(hex).map(item => {
+        var char = conv[item] || item;
+
+        return convertDecToBinary(char).padStart(4, "0");
+    });
+
+    return output.join("").match(/.{8}/g).join(" ");
+}
+
 function convertCharToBinary(char) {
     var code = char.codePointAt(); // Lookup the UTF8 code
     var bits = convertDecToBinary(code);
