@@ -1,3 +1,14 @@
+export function encodeStringToBinary(string) {
+    var raw = "";
+
+    string.match(/./gu).map(char => {
+        raw += convertCharToBinary(char);
+    });
+
+    // Add a space after every 8th character
+    return raw.match(/.{8}/g).join(" ");
+}
+
 function convertCharToBinary(char) {
     var code = char.codePointAt(); // Lookup the UTF8 code
     var bits = convertDecToBinary(code);
