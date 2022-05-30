@@ -1,3 +1,10 @@
+/**
+ * Encodes a string to binary. This repeatedly calls
+ * the helper function convertCharToBinary
+ * 
+ * @param {String} string The string to be converted
+ * @returns Binary encoded string
+ */
 export function encodeStringToBinary(string) {
     var raw = "";
 
@@ -9,6 +16,12 @@ export function encodeStringToBinary(string) {
     return raw.match(/.{8}/g).join(" ");
 }
 
+/**
+ * Decodes a binary string back to a regular string
+ * 
+ * @param {BinaryEncodedString} binary A string encoded in binary
+ * @returns The decoded string as an object
+ */
 export function decodeBinaryToString(binary) {
     var input = binary.split(" ");
     var output = [];
@@ -44,6 +57,12 @@ export function decodeBinaryToString(binary) {
     return output;
 }
 
+/**
+ * Converts binary text to hexadecimal
+ * 
+ * @param {BinaryEncodedString} binary The string to be encoded to hex
+ * @returns The hexadecimal representation of the binary string
+ */
 export function encodeBinaryToHex(binary) {
     var input = binary.replaceAll(" ", "").match(/.{4}/g);
     var conv = {
@@ -61,6 +80,12 @@ export function encodeBinaryToHex(binary) {
     return output.join("");
 }
 
+/**
+ * Decodes a hexadecimal string back to its binary representation
+ * 
+ * @param {HexEncodedString} hex The string to be decoded to binary
+ * @returns Decoded binary string, seperated with a space every 8 chars
+ */
 export function decodeHexToBinary(hex) {
     var conv = {
         "A": 10, "B": 11, "C": 12,
@@ -76,6 +101,13 @@ export function decodeHexToBinary(hex) {
     return output.join("").match(/.{8}/g).join(" ");
 }
 
+/**
+ * Converts a single character to its binary
+ * equivalent
+ * 
+ * @param {Char} char A single UTF8 character
+ * @returns The binary representation of that char
+ */
 function convertCharToBinary(char) {
     var code = char.codePointAt(); // Lookup the UTF8 code
     var bits = convertDecToBinary(code);
@@ -129,6 +161,13 @@ function convertCharToBinary(char) {
     return conv.join("");
 }
 
+/**
+ * Converts a decimal number to binary by continuously
+ * dividing it by two and flooring the remainder. 
+ * 
+ * @param {Number} num A decimal number
+ * @returns Its binary equivalent
+ */
 function convertDecToBinary(num) {
     var concat = [];
 
@@ -140,6 +179,12 @@ function convertDecToBinary(num) {
     return concat.reverse().join("");
 }
 
+/**
+ * Converts a binary encoded decimal back to a decimal
+ * 
+ * @param {BinaryEncodedString} bin A decimal integer in binary
+ * @returns Integer
+ */
 function convertBinaryToDec(bin) {
     var output = 0;
 
@@ -151,6 +196,14 @@ function convertBinaryToDec(bin) {
     return output;
 }
 
+/**
+ * Calculates how many bytes are required to represent the
+ * number of bits inputted. Support only added for up to four
+ * bytes as necessary for UTF8/unicode encoding
+ * 
+ * @param {Number} numOfBits The number of bits in the string
+ * @returns The number of bytes required to store those bits
+ */
 function calcNumOfBytes(numOfBits) {
     var opts = [7, 11, 16, 21];
     var indx = opts.find(x => numOfBits <= x);
