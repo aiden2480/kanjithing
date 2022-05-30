@@ -1,3 +1,8 @@
+import {
+    encodeStringToBinary, decodeBinaryToString,
+    encodeBinaryToHex, decodeHexToBinary,
+} from "./binary.js";
+
 const KANJI_REGEX = /^[\u4E00-\u9FAF]+$/;
 generateSettingsPage();
 
@@ -241,17 +246,19 @@ window.addEventListener("beforeunload", event => {
 
 document.getElementById("export").addEventListener("click", async () => {
     var sets = (await chrome.storage.local.get("customsets")).customsets;
-    var encoded = transform(JSON.stringify(sets), 1);
+    var encoded = encodeBinaryToHex(encodeStringToBinary(JSON.stringify(sets)));
 
-    prompt("Your exported configuration: (Right click to copy)", encoded);
+    navigator.clipboard.writeText(encoded);
+    alert("Your exported configuration has been copied to your clipboard in hex format");
 });
 
 document.getElementById("import").addEventListener("click", async () => {
     try {
         var encoded = prompt("Paste in your configuration string below");
-        var decoded = JSON.parse(transform(encoded, -1));
+        var decoded = JSON.parse(decodeBinaryToString(decodeHexToBinary(encoded)));
     } catch (error) {
-        return alert("Invalid configuration string. Couldn't import configuration");
+        alert("Invalid configuration string. Couldn't import configuration");
+        return console.error("Error while attempting to parse import string: " + encoded + "\n\n" + error);
     }
 
     await chrome.storage.local.set({ customsets: decoded });
@@ -271,11 +278,4 @@ document.getElementById("showsettings").addEventListener("change", async (event)
 document.getElementById("videoslider").addEventListener("change", async (event) => {
     var videoSpeed = event.target.value / 100;
     chrome.storage.local.set({ videoSpeed });
-})
-
-// Helper functions
-function transform(text, num=1) {
-    return text.split("").map(char => {
-        return String.fromCharCode(char.charCodeAt(0) + num);
-    }).join("");
-}
+});
