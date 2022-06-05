@@ -163,3 +163,52 @@ async function createDefaultConfig() {
     (videoSpeed !== undefined) || await chrome.storage.local.set({ videoSpeed: 0.8 });
     (settingsbtn !== undefined) || await chrome.storage.local.set({ settingsbtn: true });
 }
+
+/* Context menus */
+chrome.runtime.onInstalled.addListener(async () => {
+    var sets = (await chrome.storage.local.get("customsets")).customsets;
+
+    // Create parent element
+    var parent = chrome.contextMenus.create({
+        title: "Add kanji to custom set",
+        contexts: ["selection"],
+        id: "addtocustomset"
+    });
+
+    // Add to existing set menu
+    sets.forEach(set => {
+        chrome.contextMenus.create({
+            title: "Add to " + set.name,
+            parentId: parent,
+            id: "addtoset" + set.id,
+            contexts: ["selection"],
+        });
+    });
+});
+
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+    const ANY_REGEX = /[\u4E00-\u9FAF]+/g;
+    const match = info.selectionText.match(ANY_REGEX)?.join("");
+    if (!match) return;
+    
+    var sets = (await chrome.storage.local.get("customsets")).customsets;
+
+    if (info.menuItemId.startsWith("addtoset")) {
+        var setid = info.menuItemId.match(/addtoset(.+)/)[1];
+
+        var set = sets.find(x => x.id == setid);
+        set.kanji += match;
+
+        await chrome.storage.local.set({ customsets: sets });
+    }
+
+    // TODO If the ctx menu is being used from inside the extension,
+    // Automatically add the kanji to the currently selected set and
+    // load it
+
+    // TODO show badge text briefly on the extension icon to display
+    // success/failure
+
+    // TODO Automatically regenerate the context menu handlers every
+    // time a new set is created or deleted
+});

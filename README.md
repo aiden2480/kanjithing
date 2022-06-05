@@ -65,12 +65,6 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
 - [ ] Help page
     - How to use the extention, info about tooltips, etc
     - Open on the first install
-- [x] Settings page
-    - [ ] `customsets` -> `sets`
-    - [ ] Use the `var { sets } = ...` thing
-    - [ ] Ability to toggle starred/all kanji
-    - [ ] Fall back to default set if the set we are trying to load is deleted
-    - [ ] Show alert to confirm settings were saved
 - [ ] Flashcard thing where you get the meaning of the kanji and sample words and have to draw it
 - [ ] Custom flashcards to remember kanji/words
     - Import from quizlet
@@ -82,6 +76,7 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
     - To prevent grey/white flashes that occur when the next character loads quickly
 - [ ] Right click to remove drawing (all connected strokes)
 - [ ] Add tooltip banner when extension updates
+    - Potentially as a small subtext badge?
 - [x] Keybinds to navigate the application via keyboard
     - Up/down arrow to navigate between kanji sets
     - Left/right arrow to navigate between kanji in the currently selected set
@@ -96,7 +91,7 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
 - [ ] Use data from the KanjiAlive API to do pronuncation/sounds
 - [ ] Make CSS for buttons/inputs be consistent throughout the popup/settings/index pages
 - [ ] Fix overlap interaction with especially long word descriptions (同 kanji)
-- [ ] Use a RapidAPI key in the application to fetch data (Replit downtime)
+- [x] Use a RapidAPI key in the application to fetch data (Replit downtime)
 - [ ] Unspaghettify everything
-- [x] Instead of shifting each character over one, convert it to binary instead
-    - Ticks off the "syllabus components" requirement
+- [ ] Display notification when a custom set has been created successfully
+    - Potentially a small badge text?

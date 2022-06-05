@@ -3,7 +3,7 @@
     "description": "Learn kanji stroke order from the browser",
     "version": "2.0.2",
     "manifest_version": 3,
-    "permissions": ["storage"],
+    "permissions": ["storage", "contextMenus"],
     "options_page": "settings.html",
     "action": {
         "default_popup": "popup.html"
