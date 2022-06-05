@@ -207,8 +207,9 @@ async function generateContextMenus() {
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     const ANY_REGEX = /[\u4E00-\u9FAF]+/g;
     const match = info.selectionText.match(ANY_REGEX)?.join("");
-    if (!match) return;
     
+    // Show a little x for a second if an error occured
+    if (!match) return await displayBadge(tab, "X", "#D9381E", 3000);
     var sets = (await chrome.storage.local.get("customsets")).customsets;
 
     if (info.menuItemId === "createnewset") {
@@ -220,6 +221,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         });
         
         await chrome.storage.local.set({ customsets: sets });
+        await displayBadge(tab, "✓", "#32CD32", 3000);
     }
 
     if (info.menuItemId.startsWith("addtoset")) {
@@ -229,12 +231,27 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         set.kanji += match;
 
         await chrome.storage.local.set({ customsets: sets });
+        await displayBadge(tab, "✓", "#32CD32", 3000);
     }
 
     // TODO If the ctx menu is being used from inside the extension,
     // Automatically add the kanji to the currently selected set and
     // load it
-
-    // TODO show badge text briefly on the extension icon to display
-    // success/failure
 });
+
+async function displayBadge(tab, text, color, milliseconds) {
+    var current = {
+        color: await chrome.action.getBadgeBackgroundColor({ tabId: tab.id }),
+        text:  await chrome.action.getBadgeText({ tabId: tab.id }),
+    }
+
+    // Set text cross
+    await chrome.action.setBadgeBackgroundColor({ color });
+    await chrome.action.setBadgeText({ text })
+
+    // Schedule return to current
+    return setTimeout(async () => {
+        await chrome.action.setBadgeBackgroundColor({ color: current.color });
+        await chrome.action.setBadgeText({ text: current.text });
+    }, milliseconds);
+}
