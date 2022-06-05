@@ -175,6 +175,14 @@ chrome.runtime.onInstalled.addListener(async () => {
         id: "addtocustomset"
     });
 
+    // Create new set menu
+    chrome.contextMenus.create({
+        title: "Create new set with kanji",
+        contexts: ["selection"],
+        id: "createnewset",
+        parentId: parent,
+    });
+
     // Add to existing set menu
     sets.forEach(set => {
         chrome.contextMenus.create({
@@ -192,6 +200,17 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     if (!match) return;
     
     var sets = (await chrome.storage.local.get("customsets")).customsets;
+
+    if (info.menuItemId === "createnewset") {
+        sets.push({
+            id: sets.slice(-1)[0].id + 1,
+            name: "Unnamed set",
+            kanji: match,
+            enabled: true
+        });
+        
+        await chrome.storage.local.set({ customsets: sets });
+    }
 
     if (info.menuItemId.startsWith("addtoset")) {
         var setid = info.menuItemId.match(/addtoset(.+)/)[1];
