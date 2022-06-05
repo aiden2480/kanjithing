@@ -74,6 +74,9 @@ chrome.runtime.onInstalled.addListener(async reason => {
     if ((await chrome.management.getSelf()).installType !== "development")
         chrome.runtime.setUninstallURL("https://kanjithing-backend.chocolatejade42.repl.co/uninstall");
     
+    // Register context menus
+    await generateContextMenus();
+
     await ensureDefaultConfiguration();
     await ensureCorrectKanjiIcon();
     await ensureBetaBadge();
@@ -165,7 +168,14 @@ async function createDefaultConfig() {
 }
 
 /* Context menus */
-chrome.runtime.onInstalled.addListener(async () => {
+chrome.storage.onChanged.addListener(async (changes, namespace) => {
+    if (!"customsets" in changes) return;
+
+    await chrome.contextMenus.removeAll();
+    await generateContextMenus();
+});
+
+async function generateContextMenus() {
     var sets = (await chrome.storage.local.get("customsets")).customsets;
 
     // Create parent element
@@ -192,7 +202,7 @@ chrome.runtime.onInstalled.addListener(async () => {
             contexts: ["selection"],
         });
     });
-});
+}
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     const ANY_REGEX = /[\u4E00-\u9FAF]+/g;
@@ -227,7 +237,4 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
     // TODO show badge text briefly on the extension icon to display
     // success/failure
-
-    // TODO Automatically regenerate the context menu handlers every
-    // time a new set is created or deleted
 });
