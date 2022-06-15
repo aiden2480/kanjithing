@@ -159,7 +159,7 @@ async function generateSettingsPage() {
 function ensureDefaultConfiguration() {
     // TODO Sometimes this isn't resolving leading to the page hanging
     // Add a timeout resolver?
-    
+
     return new Promise((resolve, reject) => {
         chrome.runtime.sendMessage({type: "ensureDefaultConfig"}, resolve);
     });

@@ -75,7 +75,9 @@ chrome.runtime.onInstalled.addListener(async reason => {
         chrome.runtime.setUninstallURL("https://kanjithing-backend.chocolatejade42.repl.co/uninstall");
     
     // Register context menus
-    await generateContextMenus();
+    chrome.contextMenus.removeAll(() => {
+        generateContextMenus();
+    });
 
     await ensureDefaultConfiguration();
     await ensureCorrectKanjiIcon();
@@ -171,12 +173,13 @@ async function createDefaultConfig() {
 chrome.storage.onChanged.addListener(async (changes, namespace) => {
     if (!"customsets" in changes) return;
 
-    await chrome.contextMenus.removeAll();
-    await generateContextMenus();
+    chrome.contextMenus.removeAll(() => {
+        generateContextMenus();
+    });
 });
 
 async function generateContextMenus() {
-    var sets = (await chrome.storage.local.get("customsets")).customsets;
+    var sets = (await chrome.storage.local.get("customsets")).customsets || [];
 
     // Create parent element
     var parent = chrome.contextMenus.create({
@@ -205,6 +208,8 @@ async function generateContextMenus() {
 }
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+    if (!info.selectionText) return;
+
     const ANY_REGEX = /[\u4E00-\u9FAF]+/g;
     const match = info.selectionText.match(ANY_REGEX)?.join("");
     
