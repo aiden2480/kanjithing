@@ -157,6 +157,9 @@ async function generateSettingsPage() {
 }
 
 function ensureDefaultConfiguration() {
+    // TODO Sometimes this isn't resolving leading to the page hanging
+    // Add a timeout resolver?
+    
     return new Promise((resolve, reject) => {
         chrome.runtime.sendMessage({type: "ensureDefaultConfig"}, resolve);
     });
@@ -278,4 +281,11 @@ document.getElementById("showsettings").addEventListener("change", async (event)
 document.getElementById("videoslider").addEventListener("change", async (event) => {
     var videoSpeed = event.target.value / 100;
     chrome.storage.local.set({ videoSpeed });
+});
+
+// Refresh content on the screen if anything changes
+chrome.storage.onChanged.addListener(async (changes, namespace) => {
+    if (!"customsets" in changes) return;
+
+    generateSettingsPage();
 });
