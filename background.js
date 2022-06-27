@@ -27,7 +27,7 @@ var defaultsets = [
                    "会知思言立使作住生食飲休洗動働" +
                    "通歩待泊教始終何物自名方紙全活飯色"
     },
-]; // ID -1 for all kanji and -2 for favourited kanji
+];
 
 
 /* Set up a listener so we can receive messages from the console
@@ -212,6 +212,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
     const ANY_REGEX = /[\u4E00-\u9FAF]+/g;
     const match = info.selectionText.match(ANY_REGEX)?.join("");
+    const isPopup = tab.url == chrome.runtime.getURL("popup.html");
     
     // Show a little x for a second if an error occured
     if (!match) return await displayBadge(tab, "X", "#D9381E", 3000);
@@ -227,6 +228,11 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         
         await chrome.storage.local.set({ customsets: sets });
         await displayBadge(tab, "✓", "#32CD32", 3000);
+
+        if (isPopup) await chrome.storage.local.set({
+            selectedunit: sets.at(-1).id,
+            selectedkanji: 0,
+        });
     }
 
     if (info.menuItemId.startsWith("addtoset")) {
@@ -237,6 +243,11 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
         await chrome.storage.local.set({ customsets: sets });
         await displayBadge(tab, "✓", "#32CD32", 3000);
+
+        if (isPopup) await chrome.storage.local.set({
+            selectedunit: set.id,
+            selectedkanji: 0,
+        });
     }
 
     // TODO If the ctx menu is being used from inside the extension,
@@ -245,6 +256,8 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 });
 
 async function displayBadge(tab, text, color, milliseconds) {
+    if (tab.id < 0) tab = await chrome.tabs.query({ active: true });
+
     var current = {
         color: await chrome.action.getBadgeBackgroundColor({ tabId: tab.id }),
         text:  await chrome.action.getBadgeText({ tabId: tab.id }),

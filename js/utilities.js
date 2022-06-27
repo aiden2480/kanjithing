@@ -21,20 +21,38 @@ function getLastFrameOfVideo(url) {
             video.currentTime = video.duration;
         });
 
-        video.src = await videoURLToDataURL(url);
+        video.src = await contentURLToDataURL(url);
         video.load();
     });
 }
 
-function videoURLToDataURL(url) {
+function resizeSVG(dataURL) {
+    return new Promise((resolve, reject) => {
+        var fabcan = document.createElement("canvas");
+        var fabctx = fabcan.getContext("2d");
+        var img = new Image();
+    
+        img.addEventListener("load", () => {
+            fabctx.drawImage(img, 0, 0, 248, 248);
+            resolve(fabcan.toDataURL());
+        })
+    
+        img.src = dataURL;
+        fabcan.width = 248;
+        fabcan.height = 248;
+    });
+}
+
+function contentURLToDataURL(url) {
     // Takes the video URL and fully downloads the
     // video, before converting it to a Data URL
 
     return new Promise(async (resolve, reject) => {
-        var resp = await fetch(url);
+        var resp = await fetch(url, {cache: "force-cache"});
         var reader = new FileReader();
 
         reader.addEventListener("load", () => {
+            // console.debug(reader.result);
             resolve(reader.result);
         });
 
@@ -70,7 +88,17 @@ function convertCanvasToBlackAndWhite(canvas) {
 
 export async function checkRembrandt() {
     var kanji = selectedkanji.selectedOptions[0].innerText;
-    var videoBase64 = await getLastFrameOfVideo((await fetchKanjiDetails(kanji)).video);
+
+    // Replit backend method
+    var kanjiID = (await fetchKanjiDetails(kanji)).kanji.video.mp4.split("/").at(-1);
+    var comparison = await getLastFrameOfVideo("https://kanjithing-backend.chocolatejade42.repl.co/video/" + kanjiID);
+    
+    // SVG data URL method (broken)
+    // var kanjisvg = (await fetchKanjiDetails(kanji)).kanji.video.poster;
+    // var kanjisvgid = kanjisvg.split("/").at(-1);
+    // var svgBase64 = await contentURLToDataURL("https://kanjithing-backend.chocolatejade42.repl.co/svg/" + kanjisvgid);
+    // var comparison = await resizeSVG(svgBase64);
+    
     var blankcanv = document.createElement("canvas");
     var blankctx = blankcanv.getContext("2d");
     
@@ -81,10 +109,10 @@ export async function checkRembrandt() {
     
     // Compare drawing with video, and blank with video
     var checkrem = new Rembrandt({
-        imageA: videoBase64,
+        imageA: comparison,
         imageB: convertCanvasToBlackAndWhite(canvas),
         thresholdType: Rembrandt.THRESHOLD_PERCENT,
-        maxThreshold: 0.08,
+        maxThreshold: 0.2,
         maxDelta: 20,
         maxOffset: 0,
         // renderComposition: true,
@@ -92,7 +120,7 @@ export async function checkRembrandt() {
     });
 
     var blankrem = new Rembrandt({
-        imageA: videoBase64,
+        imageA: comparison,
         imageB: blankcanv.toDataURL(),
         // renderComposition: true,
         // compositionMaskColor: new Rembrandt.Color(0.54, 0.57, 0.62)
@@ -107,12 +135,15 @@ export async function checkRembrandt() {
 
 export async function fetchKanjiDetails(kanji) {
     // Make request for resource - either cache or online
-    var baseurl = "https://kanjithing-backend.chocolatejade42.repl.co";
-    var version = (await chrome.management.getSelf()).version.split(".").slice(0, 2).join(".");
-    var infosection = document.getElementById("infosection");
-    
+    const rapidAPI = atob("bjZ2SVQ5ZDU0Wm1zaEVlSlk1ZUdBSFpNQmt0cXAxV1V1Tmdqc253OWxpYXVRRVVFVXU");
+    const infosection = document.getElementById("infosection");
+    const options = {
+        headers: {"x-rapidapi-key": rapidAPI},
+        cache: "force-cache",
+    };
+
     try {
-        var resp = await fetch(`${baseurl}/kanji/${encodeURI(kanji)}?q=${version}`);
+        var resp = await fetch("https://kanjialive-api.p.rapidapi.com/api/public/kanji/" + kanji, options);
         var json = await resp.json();
         infosection.classList.remove("offline");
     } catch (error) {
@@ -120,8 +151,9 @@ export async function fetchKanjiDetails(kanji) {
         return {};
     }
 
-    if (json.status !== 200) {
-        console.error(json.error, resp);
+    if (!resp.ok) {
+        console.error(`Received status code ${resp.status} from `, resp);
+        infosection.classList.add("offline");
         return;
     }
 

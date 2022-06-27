@@ -32,7 +32,7 @@ async function loadKanjiIndex(index) {
     vidloading = true;
     video.src = "/media/loading.png";
     utils.fetchKanjiDetails(kanji).then(details => {
-        video.src = details.video;
+        video.src = details.kanji.video.mp4;
     })
 
     // Update browser icon
@@ -64,8 +64,7 @@ async function loadKanjiSet(setID, index=0) {
     loadKanjiIndex(index);
 }
 
-/* Add event listeners for the various elements */
-window.addEventListener("load", async () => {
+async function windowLoad() {
     // Load the custom sets into the selector menu
     (await utils.fetchAllSets()).forEach(set => {
         if (!set.enabled) return;
@@ -88,6 +87,11 @@ window.addEventListener("load", async () => {
     await loadKanjiSet(setID, kanjiIndex);
     selectedset.value = setID;
     selectedkanji.value = kanjiIndex;
+}
+
+/* Add event listeners for the various elements */
+window.addEventListener("load", async () => {
+    await windowLoad();
 });
 
 video.addEventListener("loadeddata", () => {
@@ -261,20 +265,23 @@ async function populateInformation(kanji) {
     var listelem = document.getElementById("exampleslist");
 
     // Establish readings
-    var on = json.onyomi_ja ? json.onyomi_ja.split("、") : [];
-    var kun = json.kunyomi_ja ? json.kunyomi_ja.split("、") : [];
+    var unparsed_on = json.kanji.onyomi.katakana;
+    var unparsed_kun = json.kanji.kunyomi.hiragana;
+
+    var on = unparsed_on != "n/a" ? unparsed_on.split("、") : [];
+    var kun = unparsed_kun != "n/a" ? unparsed_kun.split("、") : [];
     var readings = on.concat(kun).join("、");
 
     // Populate kanji details
     document.getElementById("selectedkanjidetails").textContent = kanji;
-    document.getElementById("selectedkanjimeaning").textContent = json.kmeaning;
-    document.getElementById("strokecount").innerText = json.kstroke;
-    document.getElementById("grade").innerText = json.kgrade;
+    document.getElementById("selectedkanjimeaning").textContent = json.kanji.meaning.english;
+    document.getElementById("strokecount").innerText = json.kanji.strokes.count;
+    document.getElementById("grade").innerText = json.references.grade;
     document.getElementById("onkunyomi").innerText = readings;
 
     // Add title to reading parent element
     var parent = document.getElementById("onkunyomi").parentElement;
-    parent.title = `おん：${json.onyomi_ja || "none"}\nくん：${json.kunyomi_ja || "none"}\n\n`;
+    parent.title = `Onyomi：${on.join("、") || "none"}\nKunyomi ：${kun.join("、") || "none"}\n\n`;
     parent.title += "Onyomi are in katakana, while kunyomi are in hiragana";
 
     // Populate examples
@@ -282,12 +289,20 @@ async function populateInformation(kanji) {
     (json.examples || []).splice(0, 6).map(item => {
         let elem = document.createElement("li");
         let reading = document.createElement("b");
-        let meaning = document.createTextNode(item[1]);
-        reading.innerText = item[0];
+        let meaning = document.createTextNode(item.meaning.english);
+        reading.innerText = item.japanese;
 
         elem.appendChild(reading);
         elem.appendChild(meaning);
-        elem.title = item[0] + item[1];
+        elem.title = item.japanese + item.meaning.english;
+
+        // Only play audio if the mouse wasn't dragged and it's left click
+        let audio = new Audio(item.audio.mp3)
+        let drag = false;
+
+        elem.addEventListener("mousedown", () => drag = false);
+        elem.addEventListener("mousemove", () => drag = true);
+        elem.addEventListener("mouseup", (e) => (e.button == 0 && !drag) && audio.play());
 
         listelem.appendChild(elem);
     });
