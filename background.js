@@ -189,7 +189,7 @@ async function createDefaultConfig() {
 
 /* Context menus */
 chrome.storage.onChanged.addListener(async (changes, namespace) => {
-    if (!"customsets" in changes) return;
+    if (!("customsets" in changes)) return;
 
     chrome.contextMenus.removeAll(() => {
         generateContextMenus();
