@@ -46,7 +46,7 @@ async function loadKanjiSet(setID, index=0) {
     selectedset.value = setID;
     var set = await utils.fetchSetFromID(setID);
 
-    console.log("Loading set ", set);
+    console.debug("Loading set ", set);
     selectedkanji.innerHTML = null;
     
     // Update current unit in database
@@ -65,6 +65,9 @@ async function loadKanjiSet(setID, index=0) {
 }
 
 async function windowLoad() {
+    // First ensure that any set is available
+    await utils.fetchAnySet();
+    
     // Load the custom sets into the selector menu
     (await utils.fetchAllSets()).forEach(set => {
         if (!set.enabled) return;
@@ -80,9 +83,34 @@ async function windowLoad() {
     document.getElementById("settings").style.visibility = settingsbtn ? "visible" : "hidden";
 
     // Load the selected kanji once prepared
-    var result = await chrome.storage.local.get(["selectedset", "selectedkanji"]);
-    let setID = result.selectedset !== undefined ? parseInt(result.selectedset) : (await utils.fetchAnySet()).id;
-    let kanjiIndex = result.selectedkanji !== undefined ? parseInt(result.selectedkanji) : 0;
+    var result = await chrome.storage.local.get(["selectedset", "selectedkanji", "customsets"]);
+
+    async function getSetID(unparsed) {
+        let int = parseInt(unparsed);
+        let set = result.customsets.find(item => int && item.id == int);
+        
+        // Couldn't be parsed as integer or set doesn't exist/isn't enabled
+        if (!int || !set || !set.enabled) {
+            return (await utils.fetchAnySet()).id;
+        }
+
+        return int;
+    }
+
+    async function getKanjiIndex(setID, unparsed) {
+        let int = parseInt(unparsed);
+        let set = result.customsets.find(item => item.id == setID);
+
+        // Couldn't be parsed as integer or index out of range
+        if (!int || set.kanji.length < int + 1) {
+            return 0
+        }
+        
+        return int;
+    }
+
+    let setID = await getSetID(result.selectedset);
+    let kanjiIndex = await getKanjiIndex(setID, result.selectedkanji)
 
     await loadKanjiSet(setID, kanjiIndex);
     selectedset.value = setID;

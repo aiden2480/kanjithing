@@ -168,8 +168,17 @@ export async function fetchSetFromID(id) {
 }
 
 export async function fetchAnySet() {
-    // Fetch any set in the event that we cannot find the desired one
+    // Fetch any enabled set in the event that we cannot find the desired one
     var sets = (await chrome.storage.local.get("customsets")).customsets;
+    var pass = sets.find(item => item.enabled);
+
+    // Return if found
+    if (pass) return pass;
+
+    // If none are found, we enable the first set and return that one
+    sets[0].enabled = true;
+    await chrome.storage.local.set({ customsets: sets });
+    
     return sets[0];
 }
 
