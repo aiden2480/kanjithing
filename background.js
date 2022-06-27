@@ -100,6 +100,9 @@ chrome.storage.onChanged.addListener(async (changes, namespace) => {
 });
 
 /* Configuration functions called above */
+/**
+ * Ensures that the correct browser icon is being displayed
+ */
 async function ensureCorrectKanjiIcon() {
     var { customsets, selectedset, selectedkanji } = await chrome.storage.local.get();
     if ([ customsets, selectedset, selectedkanji ].includes(undefined)) return;
@@ -107,15 +110,20 @@ async function ensureCorrectKanjiIcon() {
     setBrowserIcon(customsets[selectedset].kanji[selectedkanji], bypass=true);
 }
 
+/**
+ * Ensures the "Beta" badge is displayed if necessary
+ */
 async function ensureBetaBadge() {
-    // Ensure that the "Beta" badge is present if necessary
-
     if ((await chrome.management.getSelf()).installType === "development") {
         chrome.action.setBadgeText({ text: "B" });
         chrome.action.setBadgeBackgroundColor({ color: "#304db6" });
     }
 }
 
+/**
+ * Ensures that the default configuration is present if no data can be found
+ * within the chrome storage API.
+ */
 async function ensureDefaultConfiguration() {
     // Create default sets
     var sets = (await chrome.storage.local.get("customsets")).customsets;
@@ -126,7 +134,12 @@ async function ensureDefaultConfiguration() {
     (config === undefined) && await createDefaultConfig();
 }
 
-/* Script to change the browser icon */
+/**
+ * Sets the browser icon to the currently selected character
+ * 
+ * @param {Char} kanji The character to set the browser icon to
+ * @param {Boolean} bypass Bypass same-kanji check
+ */
 function setBrowserIcon(kanji, bypass=false) {
     // https://jsfiddle.net/1u37ovj9/
     if (current === kanji && !bypass) return;
@@ -149,7 +162,9 @@ function setBrowserIcon(kanji, bypass=false) {
     chrome.action.setIcon({ imageData }, () => console.log(`Set browser icon to %c${kanji}`, "color: #7289da"));
 }
 
-/* Creates defult configuration as required by ensureDefaultConfiguration */
+/**
+ * Creates defult configuration as required by ensureDefaultConfiguration
+ */
 async function createKanjiSets() {
     // {id: ..., name: ..., kanji: ..., enabled: ...}
     
@@ -163,6 +178,9 @@ async function createKanjiSets() {
     await chrome.storage.local.set({ customsets });
 }
 
+/**
+ * Creates the default configuration if need be
+ */
 async function createDefaultConfig() {
     var { videoSpeed, settingsbtn } = await chrome.storage.local.get(["videoSpeed", "settingsbtn"]);
     (videoSpeed !== undefined) || await chrome.storage.local.set({ videoSpeed: 0.8 });
@@ -178,6 +196,10 @@ chrome.storage.onChanged.addListener(async (changes, namespace) => {
     });
 });
 
+/**
+ * Generates the context menus required for each of the sets, as well as a button
+ * to create a new unnamed set with the selected characters.
+ */
 async function generateContextMenus() {
     var sets = (await chrome.storage.local.get("customsets")).customsets || [];
 
@@ -255,21 +277,29 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     // load it
 });
 
-async function displayBadge(tab, text, color, milliseconds) {
+/**
+ * Shows a badge on the extenion for a specified amount of time
+ * 
+ * @param {Tab} tab The tab to show the badge for
+ * @param {String} text The badge text
+ * @param {Colour} colour The badge colour
+ * @param {Number} milliseconds The number of ms to show the badge for
+ */
+async function displayBadge(tab, text, colour, milliseconds) {
     if (tab.id < 0) tab = await chrome.tabs.query({ active: true });
 
     var current = {
-        color: await chrome.action.getBadgeBackgroundColor({ tabId: tab.id }),
+        colour: await chrome.action.getBadgeBackgroundColor({ tabId: tab.id }),
         text:  await chrome.action.getBadgeText({ tabId: tab.id }),
     }
 
     // Set text cross
-    await chrome.action.setBadgeBackgroundColor({ color });
+    await chrome.action.setBadgeBackgroundColor({ color: colour });
     await chrome.action.setBadgeText({ text })
 
     // Schedule return to current
     return setTimeout(async () => {
-        await chrome.action.setBadgeBackgroundColor({ color: current.color });
+        await chrome.action.setBadgeBackgroundColor({ color: current.colour });
         await chrome.action.setBadgeText({ text: current.text });
     }, milliseconds);
 }

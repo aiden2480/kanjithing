@@ -85,6 +85,12 @@ async function windowLoad() {
     // Load the selected kanji once prepared
     var result = await chrome.storage.local.get(["selectedset", "selectedkanji", "customsets"]);
 
+    /**
+     * Ensures that the set ID retrieved from storage has not been deleted
+     * 
+     * @param {Numeric} unparsed The unparsed set ID
+     * @returns {Integer} The updated set ID
+     */
     async function getSetID(unparsed) {
         let int = parseInt(unparsed);
         let set = result.customsets.find(item => int && item.id == int);
@@ -97,6 +103,16 @@ async function windowLoad() {
         return int;
     }
 
+    /**
+     * Ensures that the kanji index retrieved from storage is still valid.
+     * It would become invalid if, for example, the set is updated to be
+     * only 4 chars long via the settings page although the index 5 is
+     * saved in the storage.
+     * 
+     * @param {Integer} setID The string version of the set ID
+     * @param {Numeric} unparsed The string version of the kanji index
+     * @returns {Integer} The updated kanji index
+     */
     async function getKanjiIndex(setID, unparsed) {
         let int = parseInt(unparsed);
         let set = result.customsets.find(item => item.id == setID);
@@ -284,9 +300,14 @@ Array.prototype.random = function () {
     return this[Math.floor(Math.random() * this.length)];
 }
 
-/* API call functions */
+/**
+ * Loads in all the data for the character into the side panel.
+ * This includes sample words, onyomi/kunyomi, difficulty, and
+ * stroke order. 
+ * 
+ * @param {Char} kanji The character to populate information for
+ */
 async function populateInformation(kanji) {
-    // TODO move this to the utilities.js function
     var json = await utils.fetchKanjiDetails(kanji);
     if (selectedkanji.selectedOptions[0].innerText != kanji) return;
 

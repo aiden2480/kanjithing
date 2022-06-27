@@ -37,7 +37,12 @@ chrome.extension || document.getElementById("installbutton").addEventListener("c
     window.open("https://chrome.google.com/webstore/detail/kanjithing/nccfelhkfpbnefflolffkclhenplhiab/");
 });
 
-// Helper function to transform date to human readable time
+/**
+ * Helper function to transform a date to a human readable time
+ * 
+ * @param {DateTime} datestamp The datestamp to process
+ * @returns {String} A human readable delta between the datestamp and the present
+ */
 function howLongAgo(datestamp) {
     var delta = (new Date() - new Date(datestamp)) / 1000;
     const plural = (s) => s !== 1 ? "s" : "";
@@ -64,6 +69,12 @@ function howLongAgo(datestamp) {
     return `${delta} second${plural(delta)} ago`
 }
 
+/**
+ * Parses a minimal amount of markdown within a body of text and converts it to HTML
+ * 
+ * @param {String} soup The markdown soup to be parsed
+ * @returns {String} The parsed soup
+ */
 function makeHTML(soup) {
     const urls = /\[`(\w+)`]\((\S+)\)/gm;       // Any URLS referencing Git commits
     const bold = /\*{2}(.+)\*{2}/gm;            // Text surrounded by asterisks
@@ -138,6 +149,12 @@ function makeHTML(soup) {
     return soup;
 }
 
+/**
+ * Escapes certain HTML-sensitive characters within a string
+ * 
+ * @param {String} str The string to process
+ * @returns {String} The processed string
+ */
 function escapeHTML(str) {
     return str.replace(/&/g, "&amp;")
               .replace(/</g, "&lt;")

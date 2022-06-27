@@ -6,6 +6,10 @@ import {
 const KANJI_REGEX = /^[\u4E00-\u9FAF]+$/;
 generateSettingsPage();
 
+/**
+ * The function which generates the settings page and is automatically
+ * run when the page is loaded
+ */
 async function generateKanjiSets() {
     var container = document.getElementById("setscontainer");
     var sets = (await chrome.storage.local.get("customsets")).customsets;
@@ -141,6 +145,9 @@ async function generateKanjiSets() {
     });
 }
 
+/**
+ * Generate misc settings (show settings button and video slider)
+ */
 async function generateMisc() {
     var { settingsbtn, videoSpeed } = await chrome.storage.local.get(["settingsbtn", "videoSpeed"]);
     
@@ -156,6 +163,10 @@ async function generateSettingsPage() {
     generateMisc();
 }
 
+/**
+ * Ensures that the default configuration is loaded if no other
+ * configuration can be found in the storage API.
+ */
 function ensureDefaultConfiguration() {
     // TODO Sometimes this isn't resolving leading to the page hanging
     // Add a timeout resolver?
@@ -166,6 +177,12 @@ function ensureDefaultConfiguration() {
 }
 
 // Set editing functions
+/**
+ * Retrieves a set from an ID
+ * 
+ * @param {Integer} id The ID of the set to retrieve
+ * @returns {CustomSet} The desired set
+ */
 function retrieveSet(id) {
     return new Promise(async (resolve, reject) => {
         var sets = (await chrome.storage.local.get("customsets")).customsets;
@@ -175,6 +192,13 @@ function retrieveSet(id) {
     });
 }
 
+/**
+ * Creates a new set via a user interface. Also runs checks on the inputs
+ * to ensure that the user has entered valid data.
+ * 
+ * @param {String} name The name of the set (1-12 chars)
+ * @param {String} setstr The kanji which will be contained in the set
+ */
 function createSet(name, setstr) {
     return new Promise(async (resolve, reject) => {
         var sets = (await chrome.storage.local.get("customsets")).customsets;
@@ -190,6 +214,11 @@ function createSet(name, setstr) {
     });
 }
 
+/**
+ * Deletes a set by its ID
+ * 
+ * @param {Number} id The ID of the set to delete
+ */
 function deleteSet(id) {
     return new Promise(async (resolve, reject) => {
         var sets = (await chrome.storage.local.get("customsets")).customsets;
@@ -199,6 +228,12 @@ function deleteSet(id) {
     });
 }
 
+/**
+ * Renames a set. Checks are run on the input to ensure data is valid
+ * 
+ * @param {Number} id The ID of the set to rename
+ * @param {String} name The new name (1-12 chars)
+ */
 function renameSet(id, name) {
     return new Promise(async (resolve, reject) => {
         var sets = (await chrome.storage.local.get("customsets")).customsets;
@@ -215,6 +250,12 @@ function renameSet(id, name) {
     });
 }
 
+/**
+ * Updates the kanji which are stored in a particular set
+ * 
+ * @param {Number} id The ID of the set
+ * @param {String} kanji The new kanji which will be contained in the set
+ */
 function editSetKanji(id, kanji) {
     return new Promise(async (resolve, reject) => {
         var sets = (await chrome.storage.local.get("customsets")).customsets;
