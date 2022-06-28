@@ -14,6 +14,7 @@
             max-width: 85%;
             margin: auto;
             padding-top: 30px;
+            display: table;
         }
 
         div:is(#image-left, #image-right) span {
@@ -68,9 +69,8 @@
             </span>
         </div>
 
-
         <div id="image-right">
-            <img src="media/tips/default.png" alt="Screenshot of KanjiThing user interface" width="800px"/>
+            <img src="media/tips/tracing.png" alt="Screenshot of KanjiThing user interface" width="800px"/>
             <span>
                 The video guide shows the correct drawing of the kanji, and the video may be sped up or slowed down in the settings page. When drawing, if you make a mistake
                 and wish to undo a segment you've traced over, hold the <code>Ctrl</code> key and drag to erase. <br />
@@ -78,7 +78,28 @@
                 By default, the dropdown set menu contains kanji from Units 1-12 in the Japanese textbook Wakatta, plus a list of every prescribed kanji on the Japanese
                 continuers HSC prescribed kanji list (<a href="https://bit.ly/3OcDlwY">Available here - page 66</a>). These sets can be edited from the settings page. Arrow
                 keys may be used to navigate the menus, the up and down arrows will increment and decrement the set, and the left and right arrows will adjust the selected
-                kanji in the same manner.  
+                kanji in the same manner.
+            </span>
+        </div>
+
+        <div id="image-left">
+            <img src="media/tips/ctxmenu.png" alt="Screenshot of KanjiThing settings page" width="600px"/>
+            <span>
+                The extension has built-in context menu functionality, allowing you to highlight characters you don't understand and add them to a custom set to study later.
+                The selection can be added to any previously created set, or a new one can be created. <br />
+                
+                The extension icon will change after you select a set to add the characters to. If it was successful, a green tick will appear. If an error occured, a red x
+                will appear. Usually an error will only occur in the event that the selection didn't contain any kanji in it. 
+            </span>
+        </div>
+
+        <div id="image-right">
+            <img src="media/tips/settings.png" alt="Screenshot of KanjiThing settings page" width="600px"/>
+            <span>
+                The settings page, accessible from the popup modal by pressing the slash key, allows you to edit which sets are available in the extension. You may enable/disable
+                sets to learn, as well as create new ones, edit old ones, or delete ones you've already learnt. In addition, the speed with which the drawing guide video, and the
+                visibility of the settings button can both be edited. You may also export and import your local configuration to share with your classmates, or reset settings back
+                to the defaults. 
             </span>
         </div>
     </div>
