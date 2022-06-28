@@ -93,5 +93,4 @@ $ curl -L http://kanjithing-backend.chocolatejade42.repl.co/kanji/車
 - [ ] Fix overlap interaction with especially long word descriptions (同 kanji)
 - [x] Use a RapidAPI key in the application to fetch data (Replit downtime)
 - [ ] Unspaghettify everything
-- [ ] Display notification when a custom set has been created successfully
-    - Potentially a small badge text?
+- [ ] Add method of actually accessing the tips page

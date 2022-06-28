@@ -23,10 +23,10 @@ header h1 {
 }
 
 /* Install button */
-#installbutton {
+#installbutton, #tipsbutton {
     position: fixed;
     right: 10px;
-    top: 10px;
+    top: 66px;
     
     min-width: fit-content;
     font-size: 2.75vh;
@@ -44,16 +44,23 @@ header h1 {
     transition: opacity 300ms ease-in-out 500ms, color 300ms ease-in-out;
 }
 
-#installbutton:hover {
+:is(#installbutton, #tipsbutton):hover {
     color: #36393e;
 }
 
-#installbutton img {
+:is(#installbutton, #tipsbutton) img {
     vertical-align: middle;
     margin-right: 0.25vw;
 }
 
 #installbutton.available {
+    opacity: 1;
+    cursor: pointer;
+}
+
+#tipsbutton {
+    top: 10px;
+    height: 46px;
     opacity: 1;
     cursor: pointer;
 }
