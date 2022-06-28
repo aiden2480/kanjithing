@@ -13,7 +13,7 @@ window.addEventListener("load", () => {
 });
 
 let coords = {x: 0, y: 0};
-let vidloading = false;     // Updated in popup.js
+let vidloading = false; // Updated in popup.js
 let paint = false;
 
 function updatePosition(event) {

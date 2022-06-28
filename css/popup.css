@@ -85,6 +85,7 @@ div#infosection #exampleslist * {
     white-space: nowrap;
     overflow: hidden;
     list-style-position: inside;
+    cursor: pointer;
 }
 
 /* Kanji info div */

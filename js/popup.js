@@ -32,7 +32,7 @@ async function loadKanjiIndex(index) {
     vidloading = true;
     video.src = "/media/loading.png";
     utils.fetchKanjiDetails(kanji).then(details => {
-        video.src = details.video;
+        video.src = details.kanji.video.mp4;
     })
 
     // Update browser icon
@@ -46,7 +46,7 @@ async function loadKanjiSet(setID, index=0) {
     selectedset.value = setID;
     var set = await utils.fetchSetFromID(setID);
 
-    console.log("Loading set ", set);
+    console.debug("Loading set ", set);
     selectedkanji.innerHTML = null;
     
     // Update current unit in database
@@ -64,8 +64,10 @@ async function loadKanjiSet(setID, index=0) {
     loadKanjiIndex(index);
 }
 
-/* Add event listeners for the various elements */
-window.addEventListener("load", async () => {
+async function windowLoad() {
+    // First ensure that any set is available
+    await utils.fetchAnySet();
+    
     // Load the custom sets into the selector menu
     (await utils.fetchAllSets()).forEach(set => {
         if (!set.enabled) return;
@@ -81,13 +83,59 @@ window.addEventListener("load", async () => {
     document.getElementById("settings").style.visibility = settingsbtn ? "visible" : "hidden";
 
     // Load the selected kanji once prepared
-    var result = await chrome.storage.local.get(["selectedset", "selectedkanji"]);
-    let setID = result.selectedset !== undefined ? parseInt(result.selectedset) : (await utils.fetchAnySet()).id;
-    let kanjiIndex = result.selectedkanji !== undefined ? parseInt(result.selectedkanji) : 0;
+    var result = await chrome.storage.local.get(["selectedset", "selectedkanji", "customsets"]);
+
+    /**
+     * Ensures that the set ID retrieved from storage has not been deleted
+     * 
+     * @param {Numeric} unparsed The unparsed set ID
+     * @returns {Integer} The updated set ID
+     */
+    async function getSetID(unparsed) {
+        let int = parseInt(unparsed);
+        let set = result.customsets.find(item => int && item.id == int);
+        
+        // Couldn't be parsed as integer or set doesn't exist/isn't enabled
+        if (!int || !set || !set.enabled) {
+            return (await utils.fetchAnySet()).id;
+        }
+
+        return int;
+    }
+
+    /**
+     * Ensures that the kanji index retrieved from storage is still valid.
+     * It would become invalid if, for example, the set is updated to be
+     * only 4 chars long via the settings page although the index 5 is
+     * saved in the storage.
+     * 
+     * @param {Integer} setID The string version of the set ID
+     * @param {Numeric} unparsed The string version of the kanji index
+     * @returns {Integer} The updated kanji index
+     */
+    async function getKanjiIndex(setID, unparsed) {
+        let int = parseInt(unparsed);
+        let set = result.customsets.find(item => item.id == setID);
+
+        // Couldn't be parsed as integer or index out of range
+        if (!int || set.kanji.length < int + 1) {
+            return 0
+        }
+        
+        return int;
+    }
+
+    let setID = await getSetID(result.selectedset);
+    let kanjiIndex = await getKanjiIndex(setID, result.selectedkanji)
 
     await loadKanjiSet(setID, kanjiIndex);
     selectedset.value = setID;
     selectedkanji.value = kanjiIndex;
+}
+
+/* Add event listeners for the various elements */
+window.addEventListener("load", async () => {
+    await windowLoad();
 });
 
 video.addEventListener("loadeddata", () => {
@@ -252,29 +300,37 @@ Array.prototype.random = function () {
     return this[Math.floor(Math.random() * this.length)];
 }
 
-/* API call functions */
+/**
+ * Loads in all the data for the character into the side panel.
+ * This includes sample words, onyomi/kunyomi, difficulty, and
+ * stroke order. 
+ * 
+ * @param {Char} kanji The character to populate information for
+ */
 async function populateInformation(kanji) {
-    // TODO move this to the utilities.js function
     var json = await utils.fetchKanjiDetails(kanji);
     if (selectedkanji.selectedOptions[0].innerText != kanji) return;
 
     var listelem = document.getElementById("exampleslist");
 
     // Establish readings
-    var on = json.onyomi_ja ? json.onyomi_ja.split("、") : [];
-    var kun = json.kunyomi_ja ? json.kunyomi_ja.split("、") : [];
+    var unparsed_on = json.kanji.onyomi.katakana;
+    var unparsed_kun = json.kanji.kunyomi.hiragana;
+
+    var on = unparsed_on != "n/a" ? unparsed_on.split("、") : [];
+    var kun = unparsed_kun != "n/a" ? unparsed_kun.split("、") : [];
     var readings = on.concat(kun).join("、");
 
     // Populate kanji details
     document.getElementById("selectedkanjidetails").textContent = kanji;
-    document.getElementById("selectedkanjimeaning").textContent = json.kmeaning;
-    document.getElementById("strokecount").innerText = json.kstroke;
-    document.getElementById("grade").innerText = json.kgrade;
+    document.getElementById("selectedkanjimeaning").textContent = json.kanji.meaning.english;
+    document.getElementById("strokecount").innerText = json.kanji.strokes.count;
+    document.getElementById("grade").innerText = json.references.grade;
     document.getElementById("onkunyomi").innerText = readings;
 
     // Add title to reading parent element
     var parent = document.getElementById("onkunyomi").parentElement;
-    parent.title = `おん：${json.onyomi_ja || "none"}\nくん：${json.kunyomi_ja || "none"}\n\n`;
+    parent.title = `Onyomi：${on.join("、") || "none"}\nKunyomi ：${kun.join("、") || "none"}\n\n`;
     parent.title += "Onyomi are in katakana, while kunyomi are in hiragana";
 
     // Populate examples
@@ -282,12 +338,20 @@ async function populateInformation(kanji) {
     (json.examples || []).splice(0, 6).map(item => {
         let elem = document.createElement("li");
         let reading = document.createElement("b");
-        let meaning = document.createTextNode(item[1]);
-        reading.innerText = item[0];
+        let meaning = document.createTextNode(item.meaning.english);
+        reading.innerText = item.japanese;
 
         elem.appendChild(reading);
         elem.appendChild(meaning);
-        elem.title = item[0] + item[1];
+        elem.title = item.japanese + item.meaning.english;
+
+        // Only play audio if the mouse wasn't dragged and it's left click
+        let audio = new Audio(item.audio.mp3)
+        let drag = false;
+
+        elem.addEventListener("mousedown", () => drag = false);
+        elem.addEventListener("mousemove", () => drag = true);
+        elem.addEventListener("mouseup", (e) => (e.button == 0 && !drag) && audio.play());
 
         listelem.appendChild(elem);
     });

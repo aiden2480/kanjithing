@@ -1,7 +1,11 @@
+/**
+ * Takes in a video URL and gets the last frame from that video.
+ * Used to compare video to canvas drawing via Rembrandt.
+ * 
+ * @param {URL} url The URL (data or otherwise) of a video resource
+ * @returns {DataURL} The last frame of that video as a data URL
+ */
 function getLastFrameOfVideo(url) {
-    // Take in a video URL and get the last frame from that video.
-    // Used to compare video to canvas drawing via Rembrandt.
-
     return new Promise(async (resolve, reject) => {
         var video = document.createElement("video");
         var fabcan = document.createElement("canvas");
@@ -21,20 +25,48 @@ function getLastFrameOfVideo(url) {
             video.currentTime = video.duration;
         });
 
-        video.src = await videoURLToDataURL(url);
+        video.src = await contentURLToDataURL(url);
         video.load();
     });
 }
 
-function videoURLToDataURL(url) {
-    // Takes the video URL and fully downloads the
-    // video, before converting it to a Data URL
+/**
+ * Resizes an SVG from its original size to 248x248
+ * 
+ * @param {DataURL} dataURL The data URL of the SVG
+ * @returns {DataURL} The resized element
+ */
+function resizeSVG(dataURL) {
+    return new Promise((resolve, reject) => {
+        var fabcan = document.createElement("canvas");
+        var fabctx = fabcan.getContext("2d");
+        var img = new Image();
+    
+        img.addEventListener("load", () => {
+            fabctx.drawImage(img, 0, 0, 248, 248);
+            resolve(fabcan.toDataURL());
+        })
+    
+        img.src = dataURL;
+        fabcan.width = 248;
+        fabcan.height = 248;
+    });
+}
 
+/**
+ * Takes a content URL and fully downloads the content,
+ * before converting it back to a data URL
+ * 
+ * @param {URL} url The URL of a resource on the internet
+ * @returns {DataURL} The downloaded resource
+ */
+function contentURLToDataURL(url) {
     return new Promise(async (resolve, reject) => {
-        var resp = await fetch(url);
+        var resp = await fetch(url, {cache: "force-cache"});
         var reader = new FileReader();
 
         reader.addEventListener("load", () => {
+            // console.debug(reader.result);
             resolve(reader.result);
         });
 
@@ -43,11 +75,17 @@ function videoURLToDataURL(url) {
     });
 }
 
+/**
+ * Converts a canvas to black and white for better comparison
+ * 
+ * @param {HTMLCanvas} canvas The canvas element to process
+ * @returns {HTMLCanvas} The monochrome canvas
+ */
 function convertCanvasToBlackAndWhite(canvas) {
-    // Convert the canvas to black and white for better comparison
-    
     var pixels = canvas.getContext("2d").getImageData(0, 0, 248, 248);
     var fabcan = document.createElement("canvas");
+    var fabctx = fabcan.getContext("2d");
+
     [fabcan.width, fabcan.height] = [248, 248];
 
     for (var y=0; y < pixels.height; y++) {
@@ -63,14 +101,30 @@ function convertCanvasToBlackAndWhite(canvas) {
         }
     }
 
-    var fabctx = fabcan.getContext("2d");
     fabctx.putImageData(pixels, 0, 0, 0, 0, pixels.width, pixels.height);
     return fabcan.toDataURL("image/png")
 }
 
+/**
+ * Takes the user's canvas drawing and the drawing guide video and
+ * compares them to evaluate the user's drawing. This process factors
+ * in the complexity of the character when grading.
+ * 
+ * @returns {Float} The user's score as a percentage between 0 and 1
+ */
 export async function checkRembrandt() {
     var kanji = selectedkanji.selectedOptions[0].innerText;
-    var videoBase64 = await getLastFrameOfVideo((await fetchKanjiDetails(kanji)).video);
+
+    // Replit backend method
+    var kanjiID = (await fetchKanjiDetails(kanji)).kanji.video.mp4.split("/").at(-1);
+    var comparison = await getLastFrameOfVideo("https://kanjithing-backend.chocolatejade42.repl.co/video/" + kanjiID);
+    
+    // SVG data URL method (broken)
+    // var kanjisvg = (await fetchKanjiDetails(kanji)).kanji.video.poster;
+    // var kanjisvgid = kanjisvg.split("/").at(-1);
+    // var svgBase64 = await contentURLToDataURL("https://kanjithing-backend.chocolatejade42.repl.co/svg/" + kanjisvgid);
+    // var comparison = await resizeSVG(svgBase64);
+    
     var blankcanv = document.createElement("canvas");
     var blankctx = blankcanv.getContext("2d");
     
@@ -81,10 +135,10 @@ export async function checkRembrandt() {
     
     // Compare drawing with video, and blank with video
     var checkrem = new Rembrandt({
-        imageA: videoBase64,
+        imageA: comparison,
         imageB: convertCanvasToBlackAndWhite(canvas),
         thresholdType: Rembrandt.THRESHOLD_PERCENT,
-        maxThreshold: 0.08,
+        maxThreshold: 0.2,
         maxDelta: 20,
         maxOffset: 0,
         // renderComposition: true,
@@ -92,7 +146,7 @@ export async function checkRembrandt() {
     });
 
     var blankrem = new Rembrandt({
-        imageA: videoBase64,
+        imageA: comparison,
         imageB: blankcanv.toDataURL(),
         // renderComposition: true,
         // compositionMaskColor: new Rembrandt.Color(0.54, 0.57, 0.62)
@@ -105,14 +159,26 @@ export async function checkRembrandt() {
     return Math.max(1 - check.percentageDifference / blank.percentageDifference, 0) * 100;
 }
 
+/**
+ * Looks up information on a character via the KanjiAlive
+ * RapidAPI interface. This returns information such as
+ * the character grade, pronunciations, and sample words. 
+ * 
+ * @param {Char} kanji The kanji to lookup in the API
+ * @returns {Object} The information stored on the kanji
+ */
 export async function fetchKanjiDetails(kanji) {
     // Make request for resource - either cache or online
-    var baseurl = "https://kanjithing-backend.chocolatejade42.repl.co";
-    var version = (await chrome.management.getSelf()).version.split(".").slice(0, 2).join(".");
-    var infosection = document.getElementById("infosection");
-    
+    const rapidAPI = atob("bjZ2SVQ5ZDU0Wm1zaEVlSlk1ZUdBSFpNQmt0cXAxV1V1Tmdqc253OWxpYXVRRVVFVXU");
+    const infosection = document.getElementById("infosection");
+    const options = {
+        headers: {"x-rapidapi-key": rapidAPI},
+        cache: "force-cache",
+    };
+
+    // Attempt to make the Fetch request
     try {
-        var resp = await fetch(`${baseurl}/kanji/${encodeURI(kanji)}?q=${version}`);
+        var resp = await fetch("https://kanjialive-api.p.rapidapi.com/api/public/kanji/" + kanji, options);
         var json = await resp.json();
         infosection.classList.remove("offline");
     } catch (error) {
@@ -120,33 +186,64 @@ export async function fetchKanjiDetails(kanji) {
         return {};
     }
 
-    if (json.status !== 200) {
-        console.error(json.error, resp);
+    // Fallback to offline mode if the request failed
+    if (!resp.ok) {
+        console.error(`Received status code ${resp.status} from `, resp);
+        infosection.classList.add("offline");
         return;
     }
 
     return json;
 }
 
-// Fetching sets utility functions
+/**
+ * Looks up a set based on its ID. Returns undefined if not found.
+ * 
+ * @param {Integer} id The set ID
+ * @returns {CustomSet} The retrieved set
+ */
 export async function fetchSetFromID(id) {
     // Finds a set from a given ID
     var sets = (await chrome.storage.local.get("customsets")).customsets;
     return sets.find(x => x.id == id);
 }
 
+/**
+ * Fetches any enabled set in the event that the desired one cannot be found
+ * or is disabled. 
+ * 
+ * @returns {CustomSet} Any currently enabled set
+ */
 export async function fetchAnySet() {
-    // Fetch any set in the event that we cannot find the desired one
     var sets = (await chrome.storage.local.get("customsets")).customsets;
+    var pass = sets.find(item => item.enabled);
+
+    // Return if found
+    if (pass) return pass;
+
+    // If none are found, we enable the first set and return that one
+    sets[0].enabled = true;
+    await chrome.storage.local.set({ customsets: sets });
+
     return sets[0];
 }
 
+/**
+ * Returns a random set from the user's custom sets.
+ * 
+ * @returns {CustomSet} A random set
+ */
 export async function fetchRandomSet() {
     // Fetch a random set
     var sets = (await chrome.storage.local.get("customsets")).customsets;
     return sets[Math.floor(Math.random() * sets.length)];
 }
 
+/**
+ * Returns all of the user's custom sets.
+ * 
+ * @returns {Array<CustomSet>} All sets
+ */
 export async function fetchAllSets() {
     return (await chrome.storage.local.get("customsets")).customsets;
 }
