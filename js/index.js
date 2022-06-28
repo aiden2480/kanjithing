@@ -37,6 +37,10 @@ chrome.extension || document.getElementById("installbutton").addEventListener("c
     window.open("https://chrome.google.com/webstore/detail/kanjithing/nccfelhkfpbnefflolffkclhenplhiab/");
 });
 
+document.getElementById("tipsbutton").addEventListener("click", () => {
+    window.open("/tips.html");
+});
+
 // Helper function to transform date to human readable time
 function howLongAgo(datestamp) {
     var delta = (new Date() - new Date(datestamp)) / 1000;

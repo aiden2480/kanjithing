@@ -152,6 +152,10 @@ async function generateSettingsPage() {
     // Ensure default settings are available
     await ensureDefaultConfiguration();
 
+    document.getElementById("tipsbutton").addEventListener("click", () => {
+        window.open("/tips.html");
+    });    
+
     generateKanjiSets();
     generateMisc();
 }
