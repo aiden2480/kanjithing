@@ -86,7 +86,8 @@ function convertCanvasToBlackAndWhite(canvas) {
     var fabcan = document.createElement("canvas");
     var fabctx = fabcan.getContext("2d");
 
-    [fabcan.width, fabcan.height] = [248, 248];
+    fabcan.width = 248;
+    fabcan.height = 248;
 
     for (var y=0; y < pixels.height; y++) {
         for (var x=0; x < pixels.width; x++) {
@@ -129,7 +130,8 @@ export async function checkRembrandt() {
     var blankctx = blankcanv.getContext("2d");
     
     // Draw 248x248 white on a canvas
-    [blankcanv.width, blankcanv.height] = [248, 248];
+    blankcanv.width = 248;
+    blankcanv.height = 248;
     blankctx.fillStyle = "white";
     blankctx.fillRect(0, 0, 248, 248);
     
@@ -172,7 +174,7 @@ export async function fetchKanjiDetails(kanji) {
     const rapidAPI = atob("bjZ2SVQ5ZDU0Wm1zaEVlSlk1ZUdBSFpNQmt0cXAxV1V1Tmdqc253OWxpYXVRRVVFVXU");
     const infosection = document.getElementById("infosection");
     const options = {
-        headers: {"x-rapidapi-key": rapidAPI},
+        headers: { "x-rapidapi-key": rapidAPI },
         cache: "force-cache",
     };
 
@@ -204,8 +206,9 @@ export async function fetchKanjiDetails(kanji) {
  */
 export async function fetchSetFromID(id) {
     // Finds a set from a given ID
-    var sets = (await chrome.storage.local.get("customsets")).customsets;
-    return sets.find(x => x.id == id);
+    var { customsets } = await chrome.storage.local.get("customsets");
+
+    return customsets.find(x => x.id == id);
 }
 
 /**
@@ -215,17 +218,17 @@ export async function fetchSetFromID(id) {
  * @returns {CustomSet} Any currently enabled set
  */
 export async function fetchAnySet() {
-    var sets = (await chrome.storage.local.get("customsets")).customsets;
-    var pass = sets.find(item => item.enabled);
+    var { customsets } = await chrome.storage.local.get("customsets");
+    var pass = customsets.find(item => item.enabled);
 
-    // Return if found
+    // Return if any are already enabled
     if (pass) return pass;
 
     // If none are found, we enable the first set and return that one
-    sets[0].enabled = true;
-    await chrome.storage.local.set({ customsets: sets });
+    customsets[0].enabled = true;
+    await chrome.storage.local.set({ customsets });
 
-    return sets[0];
+    return customsets[0];
 }
 
 /**
@@ -235,8 +238,9 @@ export async function fetchAnySet() {
  */
 export async function fetchRandomSet() {
     // Fetch a random set
-    var sets = (await chrome.storage.local.get("customsets")).customsets;
-    return sets[Math.floor(Math.random() * sets.length)];
+    var { customsets } = await chrome.storage.local.get("customsets");
+
+    return customsets[Math.floor(Math.random() * customsets.length)];
 }
 
 /**
@@ -249,7 +253,8 @@ export async function fetchAllSets() {
 }
 
 /**
- * Prints an image to the console
+ * Prints an image to the console. Credit to @adriancooney
+ * https://github.com/adriancooney/console.image
  * 
  * @param {URL} url The URL of the image to print to the console
  */
