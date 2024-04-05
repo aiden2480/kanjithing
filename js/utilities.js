@@ -247,3 +247,27 @@ export async function fetchRandomSet() {
 export async function fetchAllSets() {
     return (await chrome.storage.local.get("customsets")).customsets;
 }
+
+/**
+ * Prints an image to the console
+ * 
+ * @param {URL} url The URL of the image to print to the console
+ */
+console.image = function(url) {
+    var img = new Image();
+
+    img.onload = function() {
+        var properties = [
+            `font-size: 1px`,
+            `padding: 0px ${Math.floor(this.width / 2)}px`,
+            `line-height: ${this.height}px`,
+            `background: url(${url})`,
+            `background-size: ${this.width}px ${this.height}px`,
+            `color: transparent`,
+        ];
+
+        console.log("%c.", properties.join(";"));
+    };
+
+    img.src = url;
+};
