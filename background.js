@@ -71,9 +71,10 @@ chrome.runtime.onInstalled.addListener(async reason => {
         await chrome.storage.local.set({ selectedkanji: 0 });
     }
 
-    if ((await chrome.management.getSelf()).installType !== "development")
-        chrome.runtime.setUninstallURL("https://kanjithing-backend.chocolatejade42.repl.co/uninstall");
-    
+    if (!await isDevelopment()) {
+        chrome.runtime.setUninstallURL("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+    }
+
     // Register context menus
     chrome.contextMenus.removeAll(() => {
         generateContextMenus();
@@ -92,7 +93,9 @@ chrome.runtime.onStartup.addListener(async () => {
 
 chrome.storage.onChanged.addListener(async (changes, namespace) => {
     // Console log when storage values change
-    if ((await chrome.management.getSelf()).installType !== "development") return;
+    if (!await isDevelopment()) {
+        return;
+    }
 
     for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
         console.debug(`${key} : ${oldValue} -> ${newValue}`);
@@ -114,7 +117,7 @@ async function ensureCorrectKanjiIcon() {
  * Ensures the "Beta" badge is displayed if necessary
  */
 async function ensureBetaBadge() {
-    if ((await chrome.management.getSelf()).installType === "development") {
+    if (await isDevelopment()) {
         chrome.action.setBadgeText({ text: "B" });
         chrome.action.setBadgeBackgroundColor({ color: "#304db6" });
     }
@@ -126,12 +129,18 @@ async function ensureBetaBadge() {
  */
 async function ensureDefaultConfiguration() {
     // Create default sets
-    var sets = (await chrome.storage.local.get("customsets")).customsets;
-    (sets === undefined) && await createKanjiSets();
+    var { customsets } = await chrome.storage.local.get("customsets");
+
+    if (customsets === undefined) {
+        await createKanjiSets();
+    }
 
     // Create default settings
     var { config } = await chrome.storage.local.get("config");
-    (config === undefined) && await createDefaultConfig();
+
+    if (config === undefined) {
+        await createDefaultConfig();
+    }
 }
 
 /**
@@ -238,21 +247,21 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     
     // Show a little x for a second if an error occured
     if (!match) return await displayBadge(tab, "X", "#D9381E", 3000);
-    var sets = (await chrome.storage.local.get("customsets")).customsets;
+    var { customsets } = await chrome.storage.local.get("customsets");
 
     if (info.menuItemId === "createnewset") {
-        sets.push({
-            id: sets.slice(-1)[0].id + 1,
+        customsets.push({
+            id: customsets.slice(-1)[0].id + 1,
             name: "Unnamed set",
             kanji: match,
             enabled: true
         });
         
-        await chrome.storage.local.set({ customsets: sets });
+        await chrome.storage.local.set({ customsets });
         await displayBadge(tab, "✓", "#32CD32", 3000);
 
         if (isPopup) await chrome.storage.local.set({
-            selectedunit: sets.at(-1).id,
+            selectedunit: customsets.at(-1).id,
             selectedkanji: 0,
         });
     }
@@ -260,10 +269,10 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     if (info.menuItemId.startsWith("addtoset")) {
         var setid = info.menuItemId.match(/addtoset(.+)/)[1];
 
-        var set = sets.find(x => x.id == setid);
+        var set = customsets.find(x => x.id == setid);
         set.kanji += match;
 
-        await chrome.storage.local.set({ customsets: sets });
+        await chrome.storage.local.set({ customsets });
         await displayBadge(tab, "✓", "#32CD32", 3000);
 
         if (isPopup) await chrome.storage.local.set({
@@ -302,4 +311,14 @@ async function displayBadge(tab, text, colour, milliseconds) {
         await chrome.action.setBadgeBackgroundColor({ color: current.colour });
         await chrome.action.setBadgeText({ text: current.text });
     }, milliseconds);
+}
+
+/**
+ * 
+ * @returns A boolean indicating if the current installation context is dev
+ */
+async function isDevelopment() {
+    var { installType } = await chrome.management.getSelf();
+
+    return installType === "development";
 }
