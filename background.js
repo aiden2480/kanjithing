@@ -50,14 +50,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {(async 
         case "resetKanjiSets":
             await chrome.storage.local.remove("customsets");
             await createKanjiSets();
-            sendResponse();
             break;
         case "ensureDefaultConfig":
             await ensureDefaultConfiguration();
-            sendResponse();
             break;
     }
 
+    sendResponse();
 })(); return true});
 
 /* Set up a listener for when the extension is installed/chrome restarts */
