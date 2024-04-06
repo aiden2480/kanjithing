@@ -1,5 +1,4 @@
-/* Save the current kanji */
-var current;
+/* Default sets for the initial installation */
 var defaultsets = [
     {"Unit one": "学校名前父母生高姉妹兄弟住所色"},
     {"Unit two": "好同手紙英語何年私友行毎教場"},
@@ -110,7 +109,7 @@ async function ensureCorrectKanjiIcon() {
     var { customsets, selectedset, selectedkanji } = await chrome.storage.local.get();
     if ([ customsets, selectedset, selectedkanji ].includes(undefined)) return;
 
-    setBrowserIcon(customsets[selectedset].kanji[selectedkanji], bypass=true);
+    setBrowserIcon(customsets[selectedset].kanji[selectedkanji]);
 }
 
 /**
@@ -147,12 +146,9 @@ async function ensureDefaultConfiguration() {
  * Sets the browser icon to the currently selected character
  * 
  * @param {Char} kanji The character to set the browser icon to
- * @param {Boolean} bypass Bypass same-kanji check
  */
-function setBrowserIcon(kanji, bypass=false) {
+function setBrowserIcon(kanji) {
     // https://jsfiddle.net/1u37ovj9/
-    if (current === kanji && !bypass) return;
-
     var canvas = new OffscreenCanvas(64, 64);
     var context = canvas.getContext("2d");
 
@@ -166,7 +162,6 @@ function setBrowserIcon(kanji, bypass=false) {
     context.fillStyle = "#FFFAFA";
     context.fillText(kanji, 0.5 * canvas.width, 0.825 * canvas.height);
 
-    current = kanji;
     var imageData = context.getImageData(0, 0, 64, 64);
     chrome.action.setIcon({ imageData }, () => console.log(`Set browser icon to %c${kanji}`, "color: #7289da"));
 }
