@@ -88,54 +88,39 @@ function newBlankCanvas(width, height) {
  * compares them to evaluate the user's drawing. This process factors
  * in the complexity of the character when grading.
  * 
- * @returns {Float} The user's score as a percentage between 0 and 1
+ * @returns {Float} The user's score between 0 and 100
  */
 export async function checkRembrandt() {
     var kanji = selectedkanji.selectedOptions[0].innerText;
 
-    // Replit backend method
-    var kanjiID = (await fetchKanjiDetails(kanji)).kanji.video.mp4.split("/").at(-1);
-    var comparison = await getLastFrameOfVideo("https://kanjithing-backend.chocolatejade42.repl.co/video/" + kanjiID);
-    
-    // SVG data URL method (broken)
-    // var kanjisvg = (await fetchKanjiDetails(kanji)).kanji.video.poster;
-    // var kanjisvgid = kanjisvg.split("/").at(-1);
-    // var svgBase64 = await contentURLToDataURL("https://kanjithing-backend.chocolatejade42.repl.co/svg/" + kanjisvgid);
-    // var comparison = await resizeSVG(svgBase64);
-    
-    var blankcanv = document.createElement("canvas");
-    var blankctx = blankcanv.getContext("2d");
-    
-    // Draw 248x248 white on a canvas
-    blankcanv.width = 248;
-    blankcanv.height = 248;
-    blankctx.fillStyle = "white";
-    blankctx.fillRect(0, 0, 248, 248);
-    
+    var kanjiDetails = await fetchKanjiDetails(kanji);
+    var posterUrl = kanjiDetails.kanji.video.poster;
+    var posterDataUrl = await fetchUrlViaCorsProxy(posterUrl);
+    var resizedPosterCanvas = await resizeSquareSVGToCanvas(posterDataUrl, 248);
+    var posterDataUrl = convertCanvasToBlackAndWhite(resizedPosterCanvas).toDataURL();
+        
     // Compare drawing with video, and blank with video
     var checkrem = new Rembrandt({
-        imageA: comparison,
-        imageB: convertCanvasToBlackAndWhite(canvas),
-        thresholdType: Rembrandt.THRESHOLD_PERCENT,
-        maxThreshold: 0.2,
-        maxDelta: 20,
-        maxOffset: 0,
-        // renderComposition: true,
-        // compositionMaskColor: new Rembrandt.Color(0.54, 0.57, 0.62)
+        imageA: posterDataUrl,
+        imageB: convertCanvasToBlackAndWhite(canvas).toDataURL(),
+        maxOffset: 2,
+        renderComposition: true,
     });
 
     var blankrem = new Rembrandt({
-        imageA: comparison,
-        imageB: blankcanv.toDataURL(),
-        // renderComposition: true,
-        // compositionMaskColor: new Rembrandt.Color(0.54, 0.57, 0.62)
+        imageA: posterDataUrl,
+        imageB: newBlankCanvas(248, 248).toDataURL(),
+        maxOffset: 2,
     });
 
     var blank = await blankrem.compare();
     var check = await checkrem.compare();
+    console.image(check.compositionImage.src);
 
     // Find the drawing score relative to the complexity of the kanji
-    return Math.max(1 - check.percentageDifference / blank.percentageDifference, 0) * 100;
+    var score = (1 - check.percentageDifference / blank.percentageDifference - blank.percentageDifference);
+
+    return Math.max(score, 0) * 100;
 }
 
 /**
