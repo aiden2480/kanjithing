@@ -1,77 +1,23 @@
 /**
- * Takes in a video URL and gets the last frame from that video.
- * Used to compare video to canvas drawing via Rembrandt.
- * 
- * @param {URL} url The URL (data or otherwise) of a video resource
- * @returns {DataURL} The last frame of that video as a data URL
- */
-function getLastFrameOfVideo(url) {
-    return new Promise(async (resolve, reject) => {
-        var video = document.createElement("video");
-        var fabcan = document.createElement("canvas");
-        var fabctx = fabcan.getContext("2d");
-
-        video.addEventListener("error", reject);
-        video.addEventListener("loadedmetadata", () => {
-            fabcan.width = video.videoWidth;
-            fabcan.height = video.videoHeight;
-
-            video.addEventListener("seeked", () => {
-                fabctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-
-                resolve(fabcan.toDataURL());
-            });
-
-            video.currentTime = video.duration;
-        });
-
-        video.src = await contentURLToDataURL(url);
-        video.load();
-    });
-}
-
-/**
- * Resizes an SVG from its original size to 248x248
+ * Resizes an square SVG and returns the new data URL
  * 
  * @param {DataURL} dataURL The data URL of the SVG
- * @returns {DataURL} The resized element
+ * @returns {Canvas} The resized element on a canvas
  */
-function resizeSVG(dataURL) {
+function resizeSquareSVGToCanvas(dataURL, sideLength) {
     return new Promise((resolve, reject) => {
         var fabcan = document.createElement("canvas");
         var fabctx = fabcan.getContext("2d");
         var img = new Image();
     
         img.addEventListener("load", () => {
-            fabctx.drawImage(img, 0, 0, 248, 248);
-            resolve(fabcan.toDataURL());
+            fabctx.drawImage(img, 0, 0, sideLength, sideLength);
+            resolve(fabcan);
         })
     
+        fabcan.width = sideLength;
+        fabcan.height = sideLength;
         img.src = dataURL;
-        fabcan.width = 248;
-        fabcan.height = 248;
-    });
-}
-
-/**
- * Takes a content URL and fully downloads the content,
- * before converting it back to a data URL
- * 
- * @param {URL} url The URL of a resource on the internet
- * @returns {DataURL} The downloaded resource
- */
-function contentURLToDataURL(url) {
-    return new Promise(async (resolve, reject) => {
-        var resp = await fetch(url, {cache: "force-cache"});
-        var reader = new FileReader();
-
-        reader.addEventListener("load", () => {
-            // console.debug(reader.result);
-            resolve(reader.result);
-        });
-
-        reader.addEventListener("error", reject);
-        reader.readAsDataURL(await resp.blob());
     });
 }
 
