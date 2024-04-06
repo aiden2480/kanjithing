@@ -24,8 +24,8 @@ function resizeSquareSVGToCanvas(dataURL, sideLength) {
 /**
  * Converts a canvas to black and white for better comparison
  * 
- * @param {HTMLCanvas} canvas The canvas element to process
- * @returns {HTMLCanvas} The monochrome canvas
+ * @param {Canvas} canvas The canvas element to process
+ * @returns {Canvas} The monochrome canvas
  */
 function convertCanvasToBlackAndWhite(canvas) {
     var pixels = canvas.getContext("2d").getImageData(0, 0, 248, 248);
@@ -49,7 +49,38 @@ function convertCanvasToBlackAndWhite(canvas) {
     }
 
     fabctx.putImageData(pixels, 0, 0, 0, 0, pixels.width, pixels.height);
-    return fabcan.toDataURL("image/png")
+    return fabcan;
+}
+
+/**
+ * Because cors is one of the dumbest things humans have ever invented
+ * 
+ * @param {URL} url The url to request via cors proxy
+ * @returns The url page contents
+ */
+async function fetchUrlViaCorsProxy(url) {
+    var resp = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
+    var json = await resp.json();
+
+    return json.contents;
+}
+
+/**
+ * Creates a new blank canvas of dimensons widthxheight
+ * 
+ * @param {Integer} width The width of the canvas
+ * @param {Integer} height The height of the canvas
+ */
+function newBlankCanvas(width, height) {
+    var canvas = document.createElement("canvas");
+    var ctx = canvas.getContext("2d");
+
+    canvas.width = width;
+    canvas.height = height;
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, width, height);
+
+    return canvas;
 }
 
 /**
