@@ -48,6 +48,7 @@ div#panel * {
     background-color: #36393e;
     color: #7289da;
     border: 2px solid #7289da;
+    cursor: pointer;
 }
 
 #panel > select { height: 23px; }
